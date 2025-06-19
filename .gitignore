@@ -1,0 +1,14 @@
+# Backend (Spring Boot)
+tradis/target/
+tradis/.idea/
+tradis/*.iml
+
+# Frontend (Angular)
+frontend-angular/node_modules/
+frontend-angular/dist/
+frontend-angular/.angular/cache/
+
+# Global
+.env
+*.log
+.DS_Store
