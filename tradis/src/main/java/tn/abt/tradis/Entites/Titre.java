@@ -65,7 +65,7 @@ public class Titre implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id")
-    private Utilisateur utilisateur; // UTILISATEUR (créateur du titre)
+    private User user; // UTILISATEUR (créateur du titre)
 
     @OneToMany(mappedBy = "titre", cascade = CascadeType.ALL)
     private List<Reglement> reglements;

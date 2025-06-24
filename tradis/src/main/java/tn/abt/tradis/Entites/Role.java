@@ -20,5 +20,5 @@ public class Role implements Serializable {
         private RoleName nom; // ROLE_ADMIN, ROLE_AGENT
 
         @ManyToMany(mappedBy = "roles")
-        private Set<Utilisateur> utilisateurs;
+        private Set<User> users;
 }
