@@ -22,51 +22,45 @@ public class Client implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_client", unique = true, nullable = false, length = 7)
-    private String idCli;
+    private long idCli;
 
-    @Column(name = "nom", nullable = false, length = 50)
-    private String nom;
+    @Column(name = "Firstname", nullable = false, length = 50)
+    private String firstname;
 
-    @Column(name = "prenom", length = 50)
-    private String prenom;
+    @Column(name = "Lastname", length = 50)
+    private String lastname;
 
-    @Column(name="nationalité")
-    private String nationalit;
+    @Column(name="nationality")
+    private String nationality;
 
     @Column(name="resident")
     private boolean resident;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_compte_code", nullable = false)
-    private Parametre typeCompte;
+    @JoinColumn(name = "accountType", nullable = false,referencedColumnName = "code_param") // type de compte
+    private Pnom accountType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_document_code", nullable = false)
-    private Parametre typeDocument;
+    @JoinColumn(name = "DocumentType", nullable = false,referencedColumnName = "code_param") // type de doc
+    private Pnom documentType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "devise_code", nullable = false)
-    private Parametre deviseCompte;
+    @JoinColumn(name = "accountcurrency", nullable = false,referencedColumnName = "code_param") // devise de compte
+    private Pnom accountcurrency;
 
+    @Column(name = "accountNumber", nullable = false, length =20) // numero de cpt
+    private String accountNumber;
 
+    private String agency;
+    @Column(name = "accountCreationDate")
+    private LocalDate accountCreationDate; //date creation compte
 
-    @Column(name = "numero_compte", nullable = false, length = 50)
-    private String numeroCompte;
+    @Column(name = "accountColsureDate")
+    private LocalDate accountColsureDate; //date cloture compte
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "code_agence", nullable = false)
-    private Agency agence;
-
-    @Column(name = "date_creation_compte")
-    private LocalDate dateCreationCompte;
-
-    @Column(name = "date_cloture_compte")
-    private LocalDate dateClotureCompte;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "code_pays", nullable = false)
-    private Pays pays;
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Titre> titres;
+    private List<Title> titles;
+
+
 }

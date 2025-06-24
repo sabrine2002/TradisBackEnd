@@ -15,16 +15,15 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String username;
     private String password;
-    private String nom;
-    private String prenom;
+    private String LastName;
+    private String FirstName;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "utilisateur_roles",
-            joinColumns = @JoinColumn(name = "utilisateur_id"),
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;

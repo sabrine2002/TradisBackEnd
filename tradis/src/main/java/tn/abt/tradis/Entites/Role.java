@@ -17,7 +17,7 @@ public class Role implements Serializable {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
         @Enumerated(EnumType.STRING)
-        private RoleName nom; // ROLE_ADMIN, ROLE_AGENT
+        private RoleName name; // ROLE_ADMIN, ROLE_AGENT
 
         @ManyToMany(mappedBy = "roles")
         private Set<User> users;
