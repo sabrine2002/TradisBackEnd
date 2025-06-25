@@ -17,13 +17,13 @@ public class Settlement implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long IdSettlement;
 
-    private LocalDate paymentDate; // date de reglement
+    private LocalDate SettlementDate; // date de reglement
 
     @Column(precision = 19, scale = 4)
-    private BigDecimal paymentAmountLC; // montant de reglement devise
+    private BigDecimal SettlementAmountLC; // montant de reglement devise
 
     @Column(precision = 19, scale = 4)
-    private BigDecimal paymentAmountFC; // montant de reglement convertible
+    private BigDecimal SettlementAmountFC; // montant de reglement convertible
 
     private String nonResidentName; //nom de non resident
     private String invoiceNumber; //numero facture
@@ -31,10 +31,10 @@ public class Settlement implements Serializable {
     private String invoiceFilePath; // path facture
 
     @ManyToOne
-    private Pnom paymentCountry; // pays de reglement
+    private Pnom SettlementCountry; // pays de reglement
     @ManyToOne
     @JoinColumn(name = "code_devise",referencedColumnName = "idParam")
-    private Pnom CurrencyPayment;
+    private Pnom CurrencySettlement;
 
     @ManyToOne
     private Product product;
