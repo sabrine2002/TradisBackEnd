@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class Title implements Serializable {
     private static final long serialVersionUID = 1L;
     @ManyToOne
-    @JoinColumn(name = "title_code", referencedColumnName = "code_param")
+    @JoinColumn(name = "title_code", referencedColumnName = "idParam")
     private Pnom titleCode;
     @Id
     @Column(unique = true, length = 7)
@@ -56,7 +56,7 @@ public class Title implements Serializable {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "title_status", referencedColumnName = "code_param")
+    @JoinColumn(name = "title_status", referencedColumnName = "idParam")
     private Pnom titleStatus;
 
 

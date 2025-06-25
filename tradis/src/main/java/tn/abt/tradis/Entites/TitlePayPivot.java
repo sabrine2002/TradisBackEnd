@@ -23,7 +23,7 @@ public class TitlePayPivot implements Serializable {
     private Title title;
 
     @ManyToOne
-    @JoinColumn(name = "reglement_id", referencedColumnName = "ID_REGLEMENT")
+    @JoinColumn(name = "reglement_id", referencedColumnName = "IdSettlement")
     private Settlement settlement;
 
 }

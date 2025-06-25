@@ -16,7 +16,7 @@ public class Pnom implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idParam;
 
     @Column(name = "cmon", nullable = true, unique = true, length = 50)
     private String cnom;

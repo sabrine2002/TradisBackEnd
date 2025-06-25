@@ -15,7 +15,7 @@ public class Settlement implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID_Payment;
+    private Long IdSettlement;
 
     private LocalDate paymentDate; // date de reglement
 
@@ -31,18 +31,15 @@ public class Settlement implements Serializable {
     private String invoiceFilePath; // path facture
 
     @ManyToOne
-    @JoinColumn(name = "paymentCountry")
     private Pnom paymentCountry; // pays de reglement
     @ManyToOne
-    @JoinColumn(name = "CurrencyPayment", referencedColumnName = "code_param")
-    private Pnom CurrencyPayment; // pays de reglement
+    @JoinColumn(name = "code_devise",referencedColumnName = "idParam")
+    private Pnom CurrencyPayment;
 
     @ManyToOne
-    @JoinColumn(name = "Code_Product")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "id_Title")
     private Title title;
 
 

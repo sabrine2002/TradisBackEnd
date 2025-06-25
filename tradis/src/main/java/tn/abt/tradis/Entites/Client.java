@@ -37,15 +37,15 @@ public class Client implements Serializable {
     private boolean resident;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountType", nullable = false,referencedColumnName = "code_param") // type de compte
+    @JoinColumn(name = "accountType", nullable = false,referencedColumnName = "idParam") // type de compte
     private Pnom accountType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DocumentType", nullable = false,referencedColumnName = "code_param") // type de doc
+    @JoinColumn(name = "DocumentType", nullable = false,referencedColumnName = "idParam") // type de doc
     private Pnom documentType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountcurrency", nullable = false,referencedColumnName = "code_param") // devise de compte
+    @JoinColumn(name = "accountcurrency", nullable = false,referencedColumnName = "idParam") // devise de compte
     private Pnom accountcurrency;
 
     @Column(name = "accountNumber", nullable = false, length =20) // numero de cpt

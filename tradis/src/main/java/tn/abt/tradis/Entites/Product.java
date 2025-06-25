@@ -12,14 +12,14 @@ public class Product implements Serializable {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "productCode", referencedColumnName = "code_param")
+    @JoinColumn(name = "productCode", referencedColumnName = "idParam")
     private Pnom productCode;
     private String productLabel;
 
     @ManyToOne
-    @JoinColumn(name = "productType", referencedColumnName = "code_param")
+    @JoinColumn(name = "productType", referencedColumnName = "idParam")
     private Pnom productType;
 }
