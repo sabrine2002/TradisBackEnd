@@ -1,9 +1,7 @@
 package tn.abt.tradis.Enum;
 
 
-import java.io.Serializable;
-
-public enum RoleName implements Serializable {
+public enum RoleName {
     ROLE_ADMIN,
     ROLE_AGENT
 }

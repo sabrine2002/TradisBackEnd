@@ -1,24 +1,25 @@
 package tn.abt.tradis.Entites;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import tn.abt.tradis.Enum.RoleName;
 
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role implements Serializable {
 
-        private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Enumerated(EnumType.STRING)
+    private RoleName name; // ROLE_ADMIN, ROLE_AGENT
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-        @Enumerated(EnumType.STRING)
-        private RoleName name; // ROLE_ADMIN, ROLE_AGENT
-
-        @ManyToMany(mappedBy = "roles")
-        private Set<User> users;
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 }

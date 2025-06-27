@@ -2,16 +2,18 @@ package tn.abt.tradis.Entites;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Settlement implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +27,12 @@ public class Settlement implements Serializable {
     @Column(precision = 19, scale = 4)
     private BigDecimal SettlementAmountFC; // montant de reglement convertible
 
-    private String nonResidentName; //nom de non resident
-    private String invoiceNumber; //numero facture
-    private LocalDate invoiceDate; //date facture
-    private String invoiceFilePath; // path facture
+//    private String invoiceNumber; //numero facture
+//    private LocalDate invoiceDate; //date facture
+//    private String invoiceFilePath; // path facture
 
     @ManyToOne
+    @JoinColumn(referencedColumnName = "idParam")
     private Pnom SettlementCountry; // pays de reglement
     @ManyToOne
     @JoinColumn(name = "code_devise",referencedColumnName = "idParam")

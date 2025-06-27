@@ -1,9 +1,8 @@
 package tn.abt.tradis.Entites;
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
 
 import java.io.Serializable;
 
@@ -25,5 +24,9 @@ public class TitlePayPivot implements Serializable {
     @ManyToOne
     @JoinColumn(name = "reglement_id", referencedColumnName = "IdSettlement")
     private Settlement settlement;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id", referencedColumnName = "id_client")
+    private Client client;
 
 }

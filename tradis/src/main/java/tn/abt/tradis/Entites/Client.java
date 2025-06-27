@@ -1,10 +1,7 @@
 package tn.abt.tradis.Entites;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,9 +12,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "clients")
+@Table(name = "Client")
 public class Client implements Serializable {
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,25 +26,13 @@ public class Client implements Serializable {
     @Column(name = "Lastname", length = 50)
     private String lastname;
 
-    @Column(name="nationality")
+    @Column(name = "nationality")
     private String nationality;
 
-    @Column(name="resident")
+    @Column(name = "resident")
     private boolean resident;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountType", nullable = false,referencedColumnName = "idParam") // type de compte
-    private Pnom accountType;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DocumentType", nullable = false,referencedColumnName = "idParam") // type de doc
-    private Pnom documentType;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountcurrency", nullable = false,referencedColumnName = "idParam") // devise de compte
-    private Pnom accountcurrency;
-
-    @Column(name = "accountNumber", nullable = false, length =20) // numero de cpt
+    @Column(name = "accountNumber", nullable = false, length = 20) // numero de cpt
     private String accountNumber;
 
     private String agency;
@@ -58,9 +42,23 @@ public class Client implements Serializable {
     @Column(name = "accountColsureDate")
     private LocalDate accountColsureDate; //date cloture compte
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "accountType", nullable = false, referencedColumnName = "idParam") // type de compte
+    private Pnom accountType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DocumentType", nullable = false, referencedColumnName = "idParam") // type de doc
+    private Pnom documentType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "accountcurrency", nullable = false, referencedColumnName = "idParam") // devise de compte
+    private Pnom accountcurrency;
+
+
+
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Title> titles;
+    private List<TitlePayPivot> titlePayPivots;
 
 
 }

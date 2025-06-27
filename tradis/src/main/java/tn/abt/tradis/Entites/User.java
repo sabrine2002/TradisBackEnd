@@ -1,25 +1,26 @@
 package tn.abt.tradis.Entites;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private long ide;
+    private long idUser;
+
     private String username;
     private String password;
-    private String LastName;
-    private String FirstName;
+    private String lastName;
+    private String firstName;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
