@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 
 @Entity
-@Table(name = "params")
+@Table(name = "parameters")
 @Getter
 @Setter
 @NoArgsConstructor

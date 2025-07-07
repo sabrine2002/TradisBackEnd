@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Client")
+@Table(name = "Clients")
 public class Client implements Serializable {
 
     @Id
