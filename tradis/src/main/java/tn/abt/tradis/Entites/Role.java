@@ -6,20 +6,40 @@ import tn.abt.tradis.Enum.RoleName;
 
 import java.io.Serializable;
 import java.util.Set;
+import jakarta.persistence.*;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class Role implements Serializable {
-
+@Table(name = "roles")
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Enumerated(EnumType.STRING)
-    private RoleName name; // ROLE_ADMIN, ROLE_AGENT
+    private Integer id;
 
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private RoleName name;
+
+    public Role() {
+
+    }
+
+    public Role(RoleName name) {
+        this.name = name;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public RoleName getName() {
+        return name;
+    }
+
+    public void setName(RoleName name) {
+        this.name = name;
+    }
 }
