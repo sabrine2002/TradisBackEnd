@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+
 @Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
@@ -22,24 +23,29 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(max = 20)
     private String username;
 
-    @NotBlank
-    @Size(max = 50)
-    @Email
+
     private String email;
 
-    @NotBlank
-    @Size(max = 120)
+
     private String password;
+
+
+    private String firstname;
+
+
+    private String lastname;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(  name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agency_code", referencedColumnName = "idParam")
+    private Pnom agencyCode;
 
     public User() {
     }
@@ -88,5 +94,21 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+    public Pnom getAgencyCode() {
+        return agencyCode;
+    }
+
+    // setter pour agencyCode
+    public void setAgencyCode(Pnom agencyCode) {
+        this.agencyCode = agencyCode;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 }
