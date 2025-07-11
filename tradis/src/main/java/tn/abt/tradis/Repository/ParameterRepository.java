@@ -5,8 +5,9 @@ import tn.abt.tradis.Entites.Pnom;
 
 import java.util.Optional;
 
-public interface ParamRepository extends JpaRepository<Pnom, Long> {
+public interface ParameterRepository extends JpaRepository<Pnom, String> {
     Optional<Pnom> findByCacc(String cacc);
-    boolean existsByCacc(String cacc);
     Optional<Pnom> findByCnom(String cnom);
+    Optional<Pnom> findByCnomAndCacc(String cnom, String cacc);
+    Optional<Pnom> findByCnomAndLabel6(String cnom, String label6);
 }

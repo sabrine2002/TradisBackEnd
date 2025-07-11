@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "Client")
+@Table(name = "Clients")
 public class Client implements Serializable {
 
     @Id
@@ -26,39 +26,33 @@ public class Client implements Serializable {
     @Column(name = "Lastname", length = 50)
     private String lastname;
 
-    @Column(name = "nationality")
-    private String nationality;
+    @Column(name = "nationality", length = 50)
+    private String nationality; // Changed to String
 
     @Column(name = "resident")
     private boolean resident;
 
-    @Column(name = "accountNumber", nullable = false, length = 20) // numero de cpt
-    private String accountNumber;
+    @Column(name = "accountINT", nullable = false, length = 20)
+    private String accountNumber; // Changed to match database column name
 
-    private String agency;
+    @Column(name = "agency", length = 50)
+    private String agency; // Changed to String
+
     @Column(name = "accountCreationDate")
-    private LocalDate accountCreationDate; //date creation compte
+    private LocalDate accountCreationDate;
 
     @Column(name = "accountColsureDate")
-    private LocalDate accountColsureDate; //date cloture compte
+    private LocalDate accountColsureDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountType", nullable = false, referencedColumnName = "idParam") // type de compte
-    private Pnom accountType;
+    @Column(name = "accountType", nullable = false, length = 50)
+    private String accountType; // Changed to String
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DocumentType", nullable = false, referencedColumnName = "idParam") // type de doc
-    private Pnom documentType;
+    @Column(name = "DocumentType", nullable = false, length = 50)
+    private String documentType; // Changed to String
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountcurrency", nullable = false, referencedColumnName = "idParam") // devise de compte
-    private Pnom accountcurrency;
-
-
-
+    @Column(name = "accountcurrency", nullable = false, length = 50)
+    private String accountcurrency; // Changed to String
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TitlePayPivot> titlePayPivots;
-
-
 }

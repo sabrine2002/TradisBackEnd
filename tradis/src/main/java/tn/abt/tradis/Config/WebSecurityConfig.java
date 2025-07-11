@@ -62,6 +62,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow OPTIONS requests
                        .requestMatchers("/api/auth/signin").permitAll()
+                        .requestMatchers("/api/settlements/**").hasRole("AGENT")
                         .requestMatchers("/api/auth/admin").hasRole("ADMIN")
 
                         //.requestMatchers("/admin").hasRole("ADMIN")

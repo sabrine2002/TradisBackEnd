@@ -1,5 +1,6 @@
 package tn.abt.tradis.Controller;
 
+import java.lang.reflect.Parameter;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +28,7 @@ import tn.abt.tradis.Entites.Pnom;
 import tn.abt.tradis.Entites.Role;
 import tn.abt.tradis.Entites.User;
 import tn.abt.tradis.Enum.RoleName;
-import tn.abt.tradis.Repository.ParamRepository;
+import tn.abt.tradis.Repository.ParameterRepository;
 import tn.abt.tradis.Repository.RoleRepository;
 import tn.abt.tradis.Repository.UserRepository;
 import tn.abt.tradis.Service.EmailService;
@@ -42,7 +43,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private ParamRepository paramRepository;
+    private ParameterRepository paramRepository;
 
     @Autowired
     private UserRepository userRepository;
