@@ -112,4 +112,5 @@ public class Settlement implements Serializable {
     public void setTitle(Title title) {
         this.title = title;
     }
+
 }

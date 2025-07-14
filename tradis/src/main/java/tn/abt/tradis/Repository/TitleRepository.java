@@ -5,5 +5,4 @@ import tn.abt.tradis.Entites.Title;
 
 public interface TitleRepository extends JpaRepository<Title, String> {
 
-
 }

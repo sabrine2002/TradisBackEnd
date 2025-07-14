@@ -50,6 +50,10 @@ public class Title implements Serializable {
     @ManyToOne
     @JoinColumn(name = "title_code", referencedColumnName = "idParam")
     private Pnom titleCode; //Le code titre
+
+    @ManyToOne
+    @JoinColumn(name = "code_devise", referencedColumnName = "idParam")
+    private Pnom CurrencyTitle;
     // Getters
     public String getNumDom() {
         return NumDom;
@@ -210,6 +214,30 @@ public class Title implements Serializable {
 
     public void setTitleCode(Pnom titleCode) {
         this.titleCode = titleCode;
+    }
+
+    public Boolean getAdvancePayment() {
+        return isAdvancePayment;
+    }
+
+    public void setAdvancePayment(Boolean advancePayment) {
+        isAdvancePayment = advancePayment;
+    }
+
+    public Boolean getCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(Boolean cancelled) {
+        isCancelled = cancelled;
+    }
+
+    public Pnom getCurrencyTitle() {
+        return CurrencyTitle;
+    }
+
+    public void setCurrencyTitle(Pnom currencyTitle) {
+        CurrencyTitle = currencyTitle;
     }
 }
 

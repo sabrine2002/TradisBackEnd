@@ -22,10 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SettlementService {
     private static final Logger logger = LoggerFactory.getLogger(SettlementService.class);
-@Autowired
-    private  SettlementRepository settlementRepository;
     @Autowired
-    private  TitleRepository titleRepository;
+    private SettlementRepository settlementRepository;
+    @Autowired
+    private TitleRepository titleRepository;
     @Autowired
     private ParameterRepository paramRepository;
 
@@ -33,11 +33,9 @@ public class SettlementService {
     public Settlement createSettlement(SettlementCreationRequest request) {
         logger.info("Creating settlement with request: {}", request);
 
-        // Find title
         Title title = titleRepository.findById(request.getTitleId())
                 .orElseThrow(() -> new IllegalArgumentException("Title not found: " + request.getTitleId()));
 
-        // Find country parameter
         String countryCode = request.getSettlementCountryCode() != null ? request.getSettlementCountryCode().trim() : null;
         Pnom countryParam = paramRepository.findByCnomAndCacc("013", countryCode)
                 .orElseThrow(() -> {
@@ -45,7 +43,6 @@ public class SettlementService {
                     return new IllegalArgumentException("Country code invalid: " + countryCode);
                 });
 
-        // Find currency parameter using label6 in cnom='013'
         String currencyCode = request.getSettlementCurrencyCode() != null ? request.getSettlementCurrencyCode().trim() : null;
         Pnom currencyParam = paramRepository.findByCnomAndLabel6("013", currencyCode)
                 .orElseThrow(() -> {
@@ -53,7 +50,6 @@ public class SettlementService {
                     return new IllegalArgumentException("Currency code invalid: " + currencyCode);
                 });
 
-        // Find product parameter
         String productCode = request.getProductCode() != null ? request.getProductCode().trim() : null;
         Pnom productParam = paramRepository.findByCnomAndCacc("011", productCode)
                 .orElseThrow(() -> {
@@ -82,11 +78,11 @@ public class SettlementService {
     }
 
     private void validateCurrency(Title title, String settlementCurrencyCode) {
-        String titleCurrencyCode = (title.getTitleCode() != null && title.getTitleCode().getLabel6() != null)
-                ? title.getTitleCode().getLabel6().trim()
+        String titleCurrencyCode = (title.getCurrencyTitle() != null && title.getCurrencyTitle().getLabel6() != null)
+                ? title.getCurrencyTitle().getLabel6().trim()
                 : null;
         if (titleCurrencyCode == null || !titleCurrencyCode.equals(settlementCurrencyCode)) {
-            logger.error("Currency mismatch: titleCode='{}', settlementCurrencyCode='{}'", titleCurrencyCode, settlementCurrencyCode);
+            logger.error("Currency mismatch: titleCurrency='{}', settlementCurrencyCode='{}'", titleCurrencyCode, settlementCurrencyCode);
             throw new IllegalArgumentException("Currency mismatch: title=" + titleCurrencyCode + ", settlement=" + settlementCurrencyCode);
         }
     }
