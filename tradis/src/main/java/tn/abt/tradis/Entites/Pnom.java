@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "parameters")
+@Table(name = "Parameters")
 public class Pnom implements Serializable {
 
     @Id

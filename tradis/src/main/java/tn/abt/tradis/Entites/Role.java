@@ -1,12 +1,7 @@
 package tn.abt.tradis.Entites;
 
 import jakarta.persistence.*;
-import lombok.*;
 import tn.abt.tradis.Enum.RoleName;
-
-import java.io.Serializable;
-import java.util.Set;
-import jakarta.persistence.*;
 
 @Entity
 public class Role {

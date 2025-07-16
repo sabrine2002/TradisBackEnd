@@ -7,11 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.abt.tradis.Config.SettlementCreationRequest;
-import tn.abt.tradis.Entites.Pnom;
-import tn.abt.tradis.Entites.Settlement;
-import tn.abt.tradis.Entites.Title;
+import tn.abt.tradis.Entites.*;
 import tn.abt.tradis.Repository.ParameterRepository;
 import tn.abt.tradis.Repository.SettlementRepository;
+import tn.abt.tradis.Repository.TitlePayPivotRepository;
 import tn.abt.tradis.Repository.TitleRepository;
 
 import java.math.BigDecimal;
@@ -28,6 +27,8 @@ public class SettlementService {
     private TitleRepository titleRepository;
     @Autowired
     private ParameterRepository paramRepository;
+    @Autowired
+    private TitlePayPivotRepository pivotRepository;
 
     @Transactional
     public Settlement createSettlement(SettlementCreationRequest request) {
@@ -71,6 +72,15 @@ public class SettlementService {
 
         settlementRepository.save(settlement);
         logger.info("Settlement saved for title: {}", request.getTitleId());
+
+        Client client = title.getClient();
+        TitlePayPivot pivot = new TitlePayPivot();
+        pivot.setTitle(title);
+        pivot.setSettlement(settlement);
+        pivot.setClient(client);
+        pivotRepository.save(pivot);
+
+        logger.info("Pivot entry saved for title {} and settlement {}", title.getNumDom(), settlement.getIdSettlement());
 
         updateTitleAmounts(title, request.getSettlementAmountLocalCurrency());
 
