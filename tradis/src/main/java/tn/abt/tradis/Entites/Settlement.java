@@ -1,6 +1,5 @@
 package tn.abt.tradis.Entites;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,43 +12,40 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "")
+@Table(name = "settlement")
 public class Settlement implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long IdSettlement;
+    private Long idSettlement;
 
-    private LocalDate SettlementDate; // date de reglement
-
-    @Column(precision = 19, scale = 4)
-    private BigDecimal SettlementAmountLC; // montant de reglement devise
+    private LocalDate SettlementDate;
 
     @Column(precision = 19, scale = 4)
-    private BigDecimal SettlementAmountFC; // montant de reglement convertible
+    private BigDecimal SettlementAmountLC;
 
-//    private String invoiceNumber; //numero facture
-//    private LocalDate invoiceDate; //date facture
-//    private String invoiceFilePath; // path facture
+    @Column(precision = 19, scale = 4)
+    private BigDecimal SettlementAmountFC;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "idParam")
-    private Pnom SettlementCountry; // pays de reglement
+    @JoinColumn(name = "settlement_country_id_param", referencedColumnName = "id_param")
+    private Pnom SettlementCountry;
+
     @ManyToOne
-    @JoinColumn(name = "code_devise",referencedColumnName = "idParam")
+    @JoinColumn(name = "code_devise", referencedColumnName = "id_param")
     private Pnom CurrencySettlement;
 
     @ManyToOne
-    @JoinColumn(referencedColumnName = "idParam")
+    @JoinColumn(name = "settlement_product_id_param", referencedColumnName = "id_param")
     private Pnom SettlementProduct;
 
     @ManyToOne
+    @JoinColumn(name = "title_num_dom", referencedColumnName = "numDom")
     private Title title;
-
 
     // Getters
     public Long getIdSettlement() {
-        return IdSettlement;
+        return idSettlement;
     }
 
     public LocalDate getSettlementDate() {
@@ -82,7 +78,7 @@ public class Settlement implements Serializable {
 
     // Setters
     public void setIdSettlement(Long idSettlement) {
-        this.IdSettlement = idSettlement;
+        this.idSettlement = idSettlement;
     }
 
     public void setSettlementDate(LocalDate settlementDate) {
@@ -112,5 +108,4 @@ public class Settlement implements Serializable {
     public void setTitle(Title title) {
         this.title = title;
     }
-
 }

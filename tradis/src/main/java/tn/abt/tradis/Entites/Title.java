@@ -17,8 +17,8 @@ public class Title implements Serializable {
 
 
     @Id
-    @Column(unique = true, length = 7)
-    private String NumDom; //numero de titre
+    @Column(name = "numDom", unique = true, length = 7)
+    private String numDom; //numero de titre
     private String DomYear; // annee de creation du titre
     private LocalDate DomDate; //date de creation du titre
     private LocalDate EndTitleDate;// date fin du titre
@@ -44,19 +44,19 @@ public class Title implements Serializable {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "title_status", referencedColumnName = "idParam")
+    @JoinColumn(name = "title_status", referencedColumnName = "id_param")
     private Pnom titleStatus; //etat du titre
 
     @ManyToOne
-    @JoinColumn(name = "title_code", referencedColumnName = "idParam")
+    @JoinColumn(name = "title_code", referencedColumnName = "id_param")
     private Pnom titleCode; //Le code titre
 
     @ManyToOne
-    @JoinColumn(name = "code_devise", referencedColumnName = "idParam")
+    @JoinColumn(name = "code_devise", referencedColumnName = "id_param")
     private Pnom CurrencyTitle;
     // Getters
     public String getNumDom() {
-        return NumDom;
+        return numDom;
     }
 
     public String getDomYear() {
@@ -137,7 +137,7 @@ public class Title implements Serializable {
 
     // Setters
     public void setNumDom(String numDom) {
-        this.NumDom = numDom;
+        this.numDom = numDom;
     }
 
     public void setDomYear(String domYear) {

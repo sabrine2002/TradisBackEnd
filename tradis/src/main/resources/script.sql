@@ -39,28 +39,29 @@ CREATE TABLE IF NOT EXISTS clients (
                                        id_client BIGINT AUTO_INCREMENT PRIMARY KEY,
                                        Firstname VARCHAR(50) NOT NULL,
     Lastname VARCHAR(50),
-    nationality VARCHAR(3),
+    nationality BIGINT,
     resident BOOLEAN NOT NULL,
-    accountType VARCHAR(50) NOT NULL,
-    DocumentType VARCHAR(50) NOT NULL,
-    accountcurrency VARCHAR(3) NOT NULL,
+    accountType BIGINT NOT NULL,
+    DocumentType BIGINT NOT NULL,
+    accountcurrency BIGINT NOT NULL,
     accountINT VARCHAR(20) NOT NULL,
-    agency VARCHAR(10),
+    agency BIGINT,
     accountCreationDate DATE,
     accountColsureDate DATE,
     created_by BIGINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_by BIGINT,
-
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (nationality) REFERENCES Parameters(cnom),
-    FOREIGN KEY (accountType) REFERENCES Parameters(cnom),
-    FOREIGN KEY (DocumentType) REFERENCES Parameters(cnom),
-    FOREIGN KEY (accountcurrency) REFERENCES Parameters(cnom),
-    FOREIGN KEY (agency) REFERENCES Parameters(cnom),
-    CONSTRAINT unique_client_row UNIQUE (Firstname, Lastname, nationality, accountINT)
 
+    FOREIGN KEY (nationality) REFERENCES Parameters(id_param),
+    FOREIGN KEY (accountType) REFERENCES Parameters(id_param),
+    FOREIGN KEY (DocumentType) REFERENCES Parameters(id_param),
+    FOREIGN KEY (accountcurrency) REFERENCES Parameters(id_param),
+    FOREIGN KEY (agency) REFERENCES Parameters(id_param),
+
+    CONSTRAINT unique_client_row UNIQUE (Firstname, Lastname, nationality, accountINT)
     );
+
 
 
 

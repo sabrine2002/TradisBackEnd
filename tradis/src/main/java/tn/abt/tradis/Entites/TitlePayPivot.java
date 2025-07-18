@@ -3,10 +3,10 @@ package tn.abt.tradis.Entites;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 import java.io.Serializable;
 
 @Entity
+@Table(name = "title_pay_pivot")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,11 +18,11 @@ public class TitlePayPivot implements Serializable {
     private Long idP;
 
     @ManyToOne
-    @JoinColumn(name = "title_id", referencedColumnName = "NumDom")
+    @JoinColumn(name = "title_num_dom", referencedColumnName = "numDom")
     private Title title;
 
     @ManyToOne
-    @JoinColumn(name = "reglement_id", referencedColumnName = "IdSettlement")
+    @JoinColumn(name = "settlement_id", referencedColumnName = "idSettlement")
     private Settlement settlement;
 
     @ManyToOne

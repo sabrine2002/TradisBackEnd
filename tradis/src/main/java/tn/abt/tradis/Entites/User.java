@@ -45,7 +45,7 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "agency_code", referencedColumnName = "idParam")
+    @JoinColumn(name = "agency_code", referencedColumnName = "id_param")
     private Pnom agencyCode;
 
     public User() {
