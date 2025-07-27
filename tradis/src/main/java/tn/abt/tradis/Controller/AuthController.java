@@ -19,17 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tn.abt.tradis.Auth.Reponse.JwtResponse;
-import tn.abt.tradis.Auth.Reponse.MessageResponse;
 import tn.abt.tradis.Auth.Request.LoginRequest;
-import tn.abt.tradis.Config.AgentCreationRequest;
-import tn.abt.tradis.Entites.Pnom;
-import tn.abt.tradis.Entites.Role;
-import tn.abt.tradis.Entites.User;
-import tn.abt.tradis.Enum.RoleName;
-import tn.abt.tradis.Repository.ParameterRepository;
-import tn.abt.tradis.Repository.RoleRepository;
-import tn.abt.tradis.Repository.UserRepository;
-import tn.abt.tradis.Service.EmailService;
+
 import tn.abt.tradis.Service.UserDetailsImpl;
 import tn.abt.tradis.Utils.JwtUtils;
 
@@ -39,21 +30,6 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private ParameterRepository paramRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private PasswordEncoder encoder;
 
     @Autowired
     private JwtUtils jwtUtils;

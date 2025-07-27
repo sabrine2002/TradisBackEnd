@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.abt.tradis.Config.SettlementDTO;
 import tn.abt.tradis.Config.SettlementUpdateRequest;
+import tn.abt.tradis.Config.SettlementWithLabelsDTO;
 import tn.abt.tradis.Service.SettlementService;
 import tn.abt.tradis.Entites.Settlement;
 import tn.abt.tradis.Config.SettlementCreationRequest;
@@ -40,7 +41,7 @@ public class SettlementController {
     }
 
     @GetMapping("/{id}")
-    public Settlement getSettlementById(@PathVariable Long id) {
+    public SettlementWithLabelsDTO getSettlementById(@PathVariable Long id) {
         return settlementService.getSettlementById(id);
     }
 
@@ -49,4 +50,7 @@ public class SettlementController {
     public Settlement updateSettlement(@PathVariable Long id, @RequestBody SettlementUpdateRequest request) {
         return settlementService.updateSettlement(id, request);
     }
+
+
+
 }

@@ -7,35 +7,43 @@ import tn.abt.tradis.Enum.SettlementStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
-public class SettlementDTO {
+public class SettlementWithLabelsDTO {
+
     private Long idSettlement;
+    private BigDecimal settlementAmountForeignCurrency;
+    private BigDecimal settlementAmountLocalCurrency;
     private LocalDate settlementDate;
-    private BigDecimal settlementAmountLC;
-    private BigDecimal settlementAmountFC;
-    private Integer settlementCountryIdParam;
-    private Integer currencySettlementIdParam;
-    private Integer settlementProductIdParam;
-    private String titleNumDom;
+
+    private String countryLabel;
     private String countryCode;
+    private String currencyLabel;
     private String currencyCode;
     private String productCode;
+    private String titleNumDom;
+
     private SettlementStatus status;
-    // Constructeur depuis Settlement entity
-    public SettlementDTO(Settlement settlement) {
+    private LocalDateTime lastUpdatedDate;
+
+    public SettlementWithLabelsDTO() {}
+
+    public SettlementWithLabelsDTO(Settlement settlement) {
         this.idSettlement = settlement.getIdSettlement();
-        this.settlementAmountFC = settlement.getSettlementAmountFC();
-        this.settlementAmountLC = settlement.getSettlementAmountLC();
+        this.settlementAmountForeignCurrency = settlement.getSettlementAmountFC();
+        this.settlementAmountLocalCurrency = settlement.getSettlementAmountLC();
         this.settlementDate = settlement.getSettlementDate();
 
         if (settlement.getSettlementCountry() != null) {
-
-            this.countryCode = settlement.getSettlementCountry().getCnom();
+            this.countryLabel = settlement.getSettlementCountry().getLabel4();
+            this.countryCode = settlement.getSettlementCountry().getCacc();
         }
 
         if (settlement.getCurrencySettlement() != null) {
-            this.currencyCode = settlement.getCurrencySettlement().getCnom();
+            this.currencyLabel = settlement.getCurrencySettlement().getLabel4();
+            this.currencyCode = settlement.getCurrencySettlement().getLabel4();
         }
 
         if (settlement.getSettlementProduct() != null) {
@@ -49,6 +57,7 @@ public class SettlementDTO {
         if (settlement.getSettlementStatus() != null) {
             this.status = settlement.getSettlementStatus();
         }
+
+        this.lastUpdatedDate = settlement.getLastUpdatedDate();
     }
 }
-
