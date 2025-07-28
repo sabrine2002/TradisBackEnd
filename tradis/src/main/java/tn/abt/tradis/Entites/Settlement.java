@@ -50,5 +50,5 @@ public class Settlement implements Serializable {
     private SettlementStatus settlementStatus = SettlementStatus.VALIDATED;
 
     @Column(name = "last_updated_date", nullable = true)
-    private LocalDateTime lastUpdatedDate;
+    private LocalDateTime lastUpdatedDate ;
 }

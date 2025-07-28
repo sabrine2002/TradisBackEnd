@@ -1,5 +1,11 @@
 package tn.abt.tradis.Service;
 
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -18,7 +24,9 @@ import tn.abt.tradis.Config.SettlementWithLabelsDTO;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +41,8 @@ public class SettlementService {
     private ParameterRepository paramRepository;
     @Autowired
     private TitlePayPivotRepository pivotRepository;
+    @Autowired
+    private  EntityManager entityManager;
 
     @Transactional
     public Settlement createSettlement(SettlementCreationRequest request) {
@@ -59,9 +69,11 @@ public class SettlementService {
                 });
 
         String productCode = request.getProductCode() != null ? request.getProductCode().trim() : null;
+
         Pnom productParam = paramRepository.findByCnomAndCacc("011", productCode)
+                .or(() -> paramRepository.findByCnomAndCacc("012",productCode))
                 .orElseThrow(() -> {
-                    logger.error("Product code not found: cnom='011', cacc='{}'", productCode);
+                    logger.error("Product code not found: cnom='011', cacc='{}' or '012'", productCode);
                     return new IllegalArgumentException("Product code invalid: " + productCode);
                 });
 
@@ -125,9 +137,11 @@ public class SettlementService {
                 });
 
         String productCode = request.getProductCode() != null ? request.getProductCode().trim() : null;
+
         Pnom productParam = paramRepository.findByCnomAndCacc("011", productCode)
+                .or(() -> paramRepository.findByCnomAndCacc("012",productCode))
                 .orElseThrow(() -> {
-                    logger.error("Product code not found: cnom='011', cacc='{}'", productCode);
+                    logger.error("Product code not found: cnom='011', cacc='{}' or '012'", productCode);
                     return new IllegalArgumentException("Product code invalid: " + productCode);
                 });
 
@@ -272,5 +286,85 @@ public class SettlementService {
         return settlements.stream()
                 .map(SettlementWithLabelsDTO::new)
                 .collect(Collectors.toList());
+    }
+    public List<Settlement> filterSettlements(
+            Long id,
+            Integer countryId,
+            Integer currencyId,
+            Integer productId,
+            String numDom,
+            BigDecimal minAmountLC,
+            BigDecimal maxAmountLC,
+            BigDecimal minAmountFC,
+            BigDecimal maxAmountFC,
+            LocalDate startDate,
+            LocalDate endDate) {
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Settlement> query = cb.createQuery(Settlement.class);
+        Root<Settlement> settlement = query.from(Settlement.class);
+
+        // Utilisez explicitement le Predicate de JPA
+        List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
+
+        // Filtre par ID
+        if (id != null) {
+            predicates.add(cb.equal(settlement.get("idSettlement"), id));
+        }
+
+        // Filtre par pays
+        if (countryId != null) {
+            Join<Settlement, Pnom> countryJoin = settlement.join("settlementCountry");
+            predicates.add(cb.equal(countryJoin.get("idParam"), countryId));
+        }
+
+        // Filtre par devise
+        if (currencyId != null) {
+            Join<Settlement, Pnom> currencyJoin = settlement.join("currencySettlement");
+            predicates.add(cb.equal(currencyJoin.get("idParam"), currencyId));
+        }
+
+        // Filtre par produit
+        if (productId != null) {
+            Join<Settlement, Pnom> productJoin = settlement.join("settlementProduct");
+            predicates.add(cb.equal(productJoin.get("idParam"), productId));
+        }
+
+        // Filtre par numéro DOM
+        if (numDom != null && !numDom.isEmpty()) {
+            Join<Settlement, Title> titleJoin = settlement.join("title");
+            predicates.add(cb.like(titleJoin.get("numDom"), "%" + numDom + "%"));
+        }
+
+        // Filtre par montant LC (intervalle)
+        if (minAmountLC != null) {
+            predicates.add(cb.greaterThanOrEqualTo(settlement.get("SettlementAmountLC"), minAmountLC));
+        }
+        if (maxAmountLC != null) {
+            predicates.add(cb.lessThanOrEqualTo(settlement.get("SettlementAmountLC"), maxAmountLC));
+        }
+
+        // Filtre par montant FC (intervalle)
+        if (minAmountFC != null) {
+            predicates.add(cb.greaterThanOrEqualTo(settlement.get("SettlementAmountFC"), minAmountFC));
+        }
+        if (maxAmountFC != null) {
+            predicates.add(cb.lessThanOrEqualTo(settlement.get("SettlementAmountFC"), maxAmountFC));
+        }
+
+        // Filtre par date (intervalle ou exacte)
+        if (startDate != null && endDate != null) {
+            predicates.add(cb.between(settlement.get("SettlementDate"), startDate, endDate));
+        } else if (startDate != null) {
+            predicates.add(cb.greaterThanOrEqualTo(settlement.get("SettlementDate"), startDate));
+        } else if (endDate != null) {
+            predicates.add(cb.lessThanOrEqualTo(settlement.get("SettlementDate"), endDate));
+        }
+
+        // Conversion en tableau du bon type
+        query.where(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));
+        query.orderBy(cb.desc(settlement.get("SettlementDate")));
+
+        return entityManager.createQuery(query).getResultList();
     }
 }

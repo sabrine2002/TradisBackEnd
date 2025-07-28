@@ -37,7 +37,7 @@ public class SettlementWithLabelsDTO {
         this.settlementDate = settlement.getSettlementDate();
 
         if (settlement.getSettlementCountry() != null) {
-            this.countryLabel = settlement.getSettlementCountry().getLabel4();
+            this.countryLabel = settlement.getSettlementCountry().getLabel3();
             this.countryCode = settlement.getSettlementCountry().getCacc();
         }
 

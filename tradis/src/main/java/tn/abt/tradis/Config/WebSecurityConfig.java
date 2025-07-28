@@ -68,6 +68,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/user/create-admin").hasRole("SUPERADMIN")
                         .requestMatchers("/api/user/list-admins").hasRole("SUPERADMIN")
                         .requestMatchers("/api/user/create-agent").hasRole("ADMIN")
+                        .requestMatchers("/api/user/list-agents").permitAll()
+
 
                         //.requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()
