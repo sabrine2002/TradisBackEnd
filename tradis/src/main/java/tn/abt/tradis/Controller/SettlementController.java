@@ -3,16 +3,19 @@ package tn.abt.tradis.Controller;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import tn.abt.tradis.Config.*;
-import tn.abt.tradis.Entites.Pnom;
-import tn.abt.tradis.Repository.ParameterRepository;
+import tn.abt.tradis.Config.SettlementDTO;
+import tn.abt.tradis.Config.SettlementUpdateRequest;
+import tn.abt.tradis.Config.SettlementWithLabelsDTO;
+import tn.abt.tradis.Enum.SettlementStatus;
+import tn.abt.tradis.Repository.SettlementRepository;
 import tn.abt.tradis.Service.SettlementService;
 import tn.abt.tradis.Entites.Settlement;
-import java.time.LocalDate;
+import tn.abt.tradis.Config.SettlementCreationRequest;
+
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +27,8 @@ public class SettlementController {
     private  EntityManager entityManager;
     @Autowired
     private  SettlementService settlementService;
-    @Autowired
-    private ParameterRepository paramRepository;
+@Autowired
+private SettlementRepository settlementRepository;
 
     @PreAuthorize("hasRole('AGENT')")
     @PostMapping("/create")
@@ -53,55 +56,23 @@ public class SettlementController {
     public Settlement updateSettlement(@PathVariable Long id, @RequestBody SettlementUpdateRequest request) {
         return settlementService.updateSettlement(id, request);
     }
-    @PreAuthorize("hasRole('AGENT')")
+
+
     @GetMapping("/filter")
-    public List<SettlementDTO> filterSettlements(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) Integer countryId,
-            @RequestParam(required = false) Integer currencyId,
-            @RequestParam(required = false) Integer productId,
-            @RequestParam(required = false) String numDom,
+    public List<SettlementWithLabelsDTO> filterSettlements(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
             @RequestParam(required = false) BigDecimal minAmountLC,
             @RequestParam(required = false) BigDecimal maxAmountLC,
             @RequestParam(required = false) BigDecimal minAmountFC,
             @RequestParam(required = false) BigDecimal maxAmountFC,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+            @RequestParam(required = false) Long countryId,
+            @RequestParam(required = false) Long currencyId,
+            @RequestParam(required = false) String numDom,
+            @RequestParam(required = false) SettlementStatus status
     ) {
-        List<Settlement> settlements = settlementService.filterSettlements(
-                id, countryId, currencyId, productId, numDom,
-                minAmountLC, maxAmountLC, minAmountFC, maxAmountFC,
-                startDate, endDate
+        return settlementService.filterSettlements(
+                startDate, endDate, minAmountLC, maxAmountLC, minAmountFC, maxAmountFC, countryId, currencyId, numDom, status
         );
-
-        return settlements.stream()
-                .map(SettlementDTO::new)
-                .collect(Collectors.toList());
     }
-
-    @GetMapping("/countries")
-    public List<DropdownOption> getCountries() {
-        List<Pnom> countries = paramRepository.findByCnom("013");
-        return countries.stream()
-                .map(p -> new DropdownOption(
-                        p.getIdParam(),
-                        p.getLabel3(), // Nom du pays
-                        p.getLabel2()  // Code du pays
-                ))
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/currencies")
-    public List<DropdownOption> getCurrencies() {
-        List<Pnom> currencies = paramRepository.findByCnom("014");
-        return currencies.stream()
-                .map(p -> new DropdownOption(
-                        p.getIdParam(),
-                        p.getLabel4(), // Nom de la devise
-                        p.getLabel2()  // Code de la devise
-                ))
-                .collect(Collectors.toList());
-    }
-
-
 }
