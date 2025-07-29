@@ -2,6 +2,7 @@ package tn.abt.tradis.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tn.abt.tradis.Config.TitleDTO;
 import tn.abt.tradis.Entites.Title;
 import tn.abt.tradis.Repository.TitleRepository;
 
@@ -20,8 +21,9 @@ public class TitleController {
     }
 
     @GetMapping("/{numDom}")
-    public Title getTitleById(@PathVariable String numDom) {
-        return titleRepository.findById(numDom)
+    public TitleDTO getTitleById(@PathVariable String numDom) {
+        Title title = titleRepository.findById(numDom)
                 .orElseThrow(() -> new IllegalArgumentException("Title not found: " + numDom));
+        return new TitleDTO(title);
     }
 }

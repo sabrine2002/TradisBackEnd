@@ -2,10 +2,12 @@ package tn.abt.tradis.Entites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tn.abt.tradis.Enum.SettlementStatus;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -43,69 +45,10 @@ public class Settlement implements Serializable {
     @JoinColumn(name = "title_num_dom", referencedColumnName = "numDom")
     private Title title;
 
-    // Getters
-    public Long getIdSettlement() {
-        return idSettlement;
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(name = "settlement_status")
+    private SettlementStatus settlementStatus = SettlementStatus.VALIDATED;
 
-    public LocalDate getSettlementDate() {
-        return SettlementDate;
-    }
-
-    public BigDecimal getSettlementAmountLC() {
-        return SettlementAmountLC;
-    }
-
-    public BigDecimal getSettlementAmountFC() {
-        return SettlementAmountFC;
-    }
-
-    public Pnom getSettlementCountry() {
-        return SettlementCountry;
-    }
-
-    public Pnom getCurrencySettlement() {
-        return CurrencySettlement;
-    }
-
-    public Pnom getSettlementProduct() {
-        return SettlementProduct;
-    }
-
-    public Title getTitle() {
-        return title;
-    }
-
-    // Setters
-    public void setIdSettlement(Long idSettlement) {
-        this.idSettlement = idSettlement;
-    }
-
-    public void setSettlementDate(LocalDate settlementDate) {
-        this.SettlementDate = settlementDate;
-    }
-
-    public void setSettlementAmountLC(BigDecimal settlementAmountLC) {
-        this.SettlementAmountLC = settlementAmountLC;
-    }
-
-    public void setSettlementAmountFC(BigDecimal settlementAmountFC) {
-        this.SettlementAmountFC = settlementAmountFC;
-    }
-
-    public void setSettlementCountry(Pnom settlementCountry) {
-        this.SettlementCountry = settlementCountry;
-    }
-
-    public void setCurrencySettlement(Pnom currencySettlement) {
-        this.CurrencySettlement = currencySettlement;
-    }
-
-    public void setSettlementProduct(Pnom settlementProduct) {
-        this.SettlementProduct = settlementProduct;
-    }
-
-    public void setTitle(Title title) {
-        this.title = title;
-    }
+    @Column(name = "last_updated_date", nullable = true)
+    private LocalDateTime lastUpdatedDate ;
 }

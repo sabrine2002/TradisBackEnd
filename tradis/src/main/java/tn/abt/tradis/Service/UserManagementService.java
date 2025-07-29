@@ -181,6 +181,16 @@ public class UserManagementService {
 
         return ResponseEntity.ok(admins);
     }
+    public ResponseEntity<?> listAgents() {
+        Role agentRole = roleRepository.findByName(RoleName.ROLE_AGENT)
+                .orElseThrow(() -> new RuntimeException("Error: Role not found."));
+
+        List<User> agents = userRepository.findAll().stream()
+                .filter(user -> user.getRoles().contains(agentRole))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(agents);
+    }
 
 }
 

@@ -7,10 +7,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.abt.tradis.Config.SettlementDTO;
 import tn.abt.tradis.Config.SettlementUpdateRequest;
+import tn.abt.tradis.Config.SettlementWithLabelsDTO;
+import tn.abt.tradis.Enum.SettlementStatus;
+import tn.abt.tradis.Repository.SettlementRepository;
 import tn.abt.tradis.Service.SettlementService;
 import tn.abt.tradis.Entites.Settlement;
 import tn.abt.tradis.Config.SettlementCreationRequest;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +27,8 @@ public class SettlementController {
     private  EntityManager entityManager;
     @Autowired
     private  SettlementService settlementService;
+@Autowired
+private SettlementRepository settlementRepository;
 
     @PreAuthorize("hasRole('AGENT')")
     @PostMapping("/create")
@@ -40,7 +47,7 @@ public class SettlementController {
     }
 
     @GetMapping("/{id}")
-    public Settlement getSettlementById(@PathVariable Long id) {
+    public SettlementWithLabelsDTO getSettlementById(@PathVariable Long id) {
         return settlementService.getSettlementById(id);
     }
 
@@ -48,5 +55,24 @@ public class SettlementController {
     @PutMapping("/{id}")
     public Settlement updateSettlement(@PathVariable Long id, @RequestBody SettlementUpdateRequest request) {
         return settlementService.updateSettlement(id, request);
+    }
+
+
+    @GetMapping("/filter")
+    public List<SettlementWithLabelsDTO> filterSettlements(
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) BigDecimal minAmountLC,
+            @RequestParam(required = false) BigDecimal maxAmountLC,
+            @RequestParam(required = false) BigDecimal minAmountFC,
+            @RequestParam(required = false) BigDecimal maxAmountFC,
+            @RequestParam(required = false) Long countryId,
+            @RequestParam(required = false) Long currencyId,
+            @RequestParam(required = false) String numDom,
+            @RequestParam(required = false) SettlementStatus status
+    ) {
+        return settlementService.filterSettlements(
+                startDate, endDate, minAmountLC, maxAmountLC, minAmountFC, maxAmountFC, countryId, currencyId, numDom, status
+        );
     }
 }

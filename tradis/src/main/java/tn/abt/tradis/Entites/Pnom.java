@@ -17,7 +17,7 @@ public class Pnom implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_param")
-    private Long id_param;
+    private Long idParam;
 
     @Column(name = "cnom")
     private String cnom;
@@ -37,7 +37,7 @@ public class Pnom implements Serializable {
 
     // Getters
     public Long getIdParam() {
-        return id_param;
+        return idParam;
     }
 
     public String getCnom() {
@@ -82,7 +82,7 @@ public class Pnom implements Serializable {
 
     // Setters
     public void setIdParam(Long idParam) {
-        this.id_param = idParam;
+        this.idParam = idParam;
     }
 
     public void setCnom(String cnom) {

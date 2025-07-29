@@ -9,27 +9,30 @@ import org.springframework.stereotype.Service;
 import tn.abt.tradis.Config.SettlementCreationRequest;
 import tn.abt.tradis.Config.SettlementUpdateRequest;
 import tn.abt.tradis.Entites.*;
+import tn.abt.tradis.Enum.SettlementStatus;
 import tn.abt.tradis.Repository.ParameterRepository;
 import tn.abt.tradis.Repository.SettlementRepository;
 import tn.abt.tradis.Repository.TitlePayPivotRepository;
 import tn.abt.tradis.Repository.TitleRepository;
-
+import tn.abt.tradis.Config.SettlementWithLabelsDTO;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SettlementService {
     private static final Logger logger = LoggerFactory.getLogger(SettlementService.class);
     @Autowired
-    private  SettlementRepository settlementRepository;
+    private SettlementRepository settlementRepository;
     @Autowired
-    private  TitleRepository titleRepository;
+    private TitleRepository titleRepository;
     @Autowired
-    private  ParameterRepository paramRepository;
+    private ParameterRepository paramRepository;
     @Autowired
-    private  TitlePayPivotRepository pivotRepository;
+    private TitlePayPivotRepository pivotRepository;
 
     @Transactional
     public Settlement createSettlement(SettlementCreationRequest request) {
@@ -49,9 +52,9 @@ public class SettlementService {
                 });
 
         String currencyCode = request.getSettlementCurrencyCode() != null ? request.getSettlementCurrencyCode().trim() : null;
-        Pnom currencyParam = paramRepository.findByCnomAndLabel3("014", currencyCode)
+        Pnom currencyParam = paramRepository.findByCnomAndLabel4("014", currencyCode)
                 .orElseThrow(() -> {
-                    logger.error("Currency code not found: cnom='014', label3='{}'", currencyCode);
+                    logger.error("Currency code not found: cnom='014', label4='{}'", currencyCode);
                     return new IllegalArgumentException("Currency code invalid: " + currencyCode);
                 });
 
@@ -73,7 +76,7 @@ public class SettlementService {
         settlement.setSettlementCountry(countryParam);
         settlement.setCurrencySettlement(currencyParam);
         settlement.setSettlementProduct(productParam);
-
+        settlement.setSettlementStatus(SettlementStatus.VALIDATED);
         settlementRepository.save(settlement);
         logger.info("Settlement saved for title: {}", request.getTitleId());
 
@@ -115,9 +118,9 @@ public class SettlementService {
                 });
 
         String currencyCode = request.getSettlementCurrencyCode() != null ? request.getSettlementCurrencyCode().trim() : null;
-        Pnom currencyParam = paramRepository.findByCnomAndLabel3("014", currencyCode)
+        Pnom currencyParam = paramRepository.findByCnomAndLabel4("014", currencyCode)
                 .orElseThrow(() -> {
-                    logger.error("Currency code not found: cnom='014', label3='{}'", currencyCode);
+                    logger.error("Currency code not found: cnom='014', label4='{}'", currencyCode);
                     return new IllegalArgumentException("Currency code invalid: " + currencyCode);
                 });
 
@@ -140,6 +143,20 @@ public class SettlementService {
         settlement.setCurrencySettlement(currencyParam);
         settlement.setSettlementProduct(productParam);
 
+        // Gestion du status (si présent dans la requête)
+        if (request.getStatus() != null) {
+            try {
+                SettlementStatus newStatus = request.getStatus();
+                settlement.setSettlementStatus(newStatus);
+            } catch (IllegalArgumentException e) {
+                logger.error("Invalid settlement status: {}", request.getStatus());
+                throw new IllegalArgumentException("Invalid settlement status: " + request.getStatus());
+            }
+        }
+
+        // Set the last updated date to the current timestamp
+        settlement.setLastUpdatedDate(LocalDateTime.now());
+
         settlementRepository.save(settlement);
         logger.info("Settlement updated for id: {}, title: {}", idSettlement, request.getTitleId());
 
@@ -158,7 +175,7 @@ public class SettlementService {
 
     private void validateCurrency(Title title, String settlementCurrencyCode) {
         String titleCurrencyCode = (title.getCurrencyTitle() != null && title.getCurrencyTitle().getLabel3() != null)
-                ? title.getCurrencyTitle().getLabel3().trim()
+                ? title.getCurrencyTitle().getLabel4().trim()
                 : null;
         if (titleCurrencyCode == null || !titleCurrencyCode.equals(settlementCurrencyCode)) {
             logger.error("Currency mismatch: titleCurrency='{}', settlementCurrencyCode='{}'", titleCurrencyCode, settlementCurrencyCode);
@@ -244,8 +261,41 @@ public class SettlementService {
         return settlementRepository.findAll();
     }
 
-    public Settlement getSettlementById(Long id) {
-        return settlementRepository.findById(id)
+    public SettlementWithLabelsDTO getSettlementById(Long id) {
+        Settlement settlement = settlementRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Règlement non trouvé: " + id));
+        return new SettlementWithLabelsDTO(settlement);
+    }
+
+    public List<SettlementWithLabelsDTO> getAllSettlementsWithLabels() {
+        List<Settlement> settlements = settlementRepository.findAll();
+        return settlements.stream()
+                .map(SettlementWithLabelsDTO::new)
+                .collect(Collectors.toList());
+    }
+
+
+    public List<SettlementWithLabelsDTO> filterSettlements(
+            String startDate,
+            String endDate,
+            BigDecimal minAmountLC,
+            BigDecimal maxAmountLC,
+            BigDecimal minAmountFC,
+            BigDecimal maxAmountFC,
+            Long countryId,
+            Long currencyId,
+            String numDom,
+            SettlementStatus status
+    ) {
+        LocalDate start = startDate != null ? LocalDate.parse(startDate) : null;
+        LocalDate end = endDate != null ? LocalDate.parse(endDate) : null;
+
+        List<Settlement> settlements = settlementRepository.findByFilters(
+                start, end, minAmountLC, maxAmountLC, minAmountFC, maxAmountFC, countryId, currencyId, numDom, status
+        );
+
+        return settlements.stream()
+                .map(SettlementWithLabelsDTO::new)
+                .collect(Collectors.toList());
     }
 }

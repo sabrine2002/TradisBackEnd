@@ -11,6 +11,8 @@ import tn.abt.tradis.Config.AgentCreationRequest;
 import tn.abt.tradis.Service.UserManagementService;
 
 
+
+
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -34,4 +36,11 @@ public class UserController {
     public ResponseEntity<?> listAdmins() {
         return userManagementService.listAdmins();
     }
+
+
+    @GetMapping("/list-agents")
+    public ResponseEntity<?> listAgents() {
+        return userManagementService.listAgents();
+    }
+
 }

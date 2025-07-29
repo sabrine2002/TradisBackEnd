@@ -11,7 +11,8 @@ public interface ParameterRepository extends JpaRepository<Pnom, String> {
     Optional<Pnom> findByCacc(String cacc);
     Optional<Pnom> findByCnomAndCacc(String cnom, String cacc);
     Optional<Pnom> findByCnomAndLabel3(String cnom, String label3);
-    Optional<Pnom> findByCnomAndLabel5(String cnom, String label5);
-
+    Optional<Pnom> findByCnomAndLabel4(String cnom, String label4);
+    Optional<Pnom> findByCnomAndIdParam(String cnom, Long idParam);
+    Optional<Pnom> findByIdParam(Long idParam);
 
 }

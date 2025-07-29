@@ -1,8 +1,19 @@
 package tn.abt.tradis.Config;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import tn.abt.tradis.Enum.SettlementStatus;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SettlementUpdateRequest {
     private String titleId;
     private BigDecimal settlementAmountLocalCurrency;
@@ -11,50 +22,6 @@ public class SettlementUpdateRequest {
     private String settlementCurrencyCode;
     private String settlementCountryCode;
     private String productCode;
+    private SettlementStatus status;
 
-    // Getters
-    public String getTitleId() {
-        return titleId;
-    }
-    public BigDecimal getSettlementAmountLocalCurrency() {
-        return settlementAmountLocalCurrency;
-    }
-    public BigDecimal getSettlementAmountForeignCurrency() {
-        return settlementAmountForeignCurrency;
-    }
-    public LocalDate getSettlementDate() {
-        return settlementDate;
-    }
-    public String getSettlementCurrencyCode() {
-        return settlementCurrencyCode;
-    }
-    public String getSettlementCountryCode() {
-        return settlementCountryCode;
-    }
-    public String getProductCode() {
-        return productCode;
-    }
-
-    // Setters
-    public void setTitleId(String titleId) {
-        this.titleId = titleId;
-    }
-    public void setSettlementAmountLocalCurrency(BigDecimal settlementAmountLocalCurrency) {
-        this.settlementAmountLocalCurrency = settlementAmountLocalCurrency;
-    }
-    public void setSettlementAmountForeignCurrency(BigDecimal settlementAmountForeignCurrency) {
-        this.settlementAmountForeignCurrency = settlementAmountForeignCurrency;
-    }
-    public void setSettlementDate(LocalDate settlementDate) {
-        this.settlementDate = settlementDate;
-    }
-    public void setSettlementCurrencyCode(String settlementCurrencyCode) {
-        this.settlementCurrencyCode = settlementCurrencyCode;
-    }
-    public void setSettlementCountryCode(String settlementCountryCode) {
-        this.settlementCountryCode = settlementCountryCode;
-    }
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
-    }
 }
