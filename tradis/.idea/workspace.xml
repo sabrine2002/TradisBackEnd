@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6bd4605f-3bba-4c5c-8ec7-94d1fdbdf622" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2zaIQPSZvFnCDeN50l0JeDHXffE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.Tradis [clean].executor": "Run",
+    "Maven.Tradis [install].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.TradisApplication.executor": "Run",
+    "git-widget-placeholder": "filtersettlement",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/ahmed/OneDrive/Desktop/TradisBackEnd/tradis",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="TradisApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="Tradis" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="tn.abt.tradis.TradisApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6bd4605f-3bba-4c5c-8ec7-94d1fdbdf622" name="Changes" comment="" />
+      <created>1751962740992</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1751962740992</updated>
+      <workItem from="1751962742036" duration="9019000" />
+      <workItem from="1752047682053" duration="11399000" />
+      <workItem from="1752142406963" duration="17719000" />
+      <workItem from="1752227356456" duration="3298000" />
+      <workItem from="1752254602060" duration="2353000" />
+      <workItem from="1752403013426" duration="5699000" />
+      <workItem from="1752480282785" duration="13240000" />
+      <workItem from="1752567215536" duration="10094000" />
+      <workItem from="1752651338786" duration="11981000" />
+      <workItem from="1752705218787" duration="1383000" />
+      <workItem from="1752745349113" duration="2795000" />
+      <workItem from="1752753607034" duration="1807000" />
+      <workItem from="1752764670601" duration="1574000" />
+      <workItem from="1752779630003" duration="1087000" />
+      <workItem from="1752824418952" duration="6754000" />
+      <workItem from="1752925973357" duration="5651000" />
+      <workItem from="1753032994534" duration="2992000" />
+      <workItem from="1753087909983" duration="5511000" />
+      <workItem from="1753257952107" duration="10621000" />
+      <workItem from="1753616225436" duration="5326000" />
+      <workItem from="1753653949452" duration="557000" />
+      <workItem from="1753688380702" duration="4769000" />
+      <workItem from="1753741961511" duration="3710000" />
+      <workItem from="1753775200603" duration="13532000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalStateException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
