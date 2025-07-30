@@ -55,5 +55,172 @@ public class Title implements Serializable {
     @JoinColumn(name = "code_devise", referencedColumnName = "id_param")
     private Pnom CurrencyTitle;
 
+    public String getNumDom() {
+        return numDom;
+    }
+
+    public void setNumDom(String numDom) {
+        this.numDom = numDom;
+    }
+
+    public String getDomYear() {
+        return DomYear;
+    }
+
+    public void setDomYear(String domYear) {
+        DomYear = domYear;
+    }
+
+    public LocalDate getDomDate() {
+        return DomDate;
+    }
+
+    public void setDomDate(LocalDate domDate) {
+        DomDate = domDate;
+    }
+
+    public String getContractNum() {
+        return ContractNum;
+    }
+
+    public void setContractNum(String contractNum) {
+        ContractNum = contractNum;
+    }
+
+    public LocalDate getEndTitleDate() {
+        return EndTitleDate;
+    }
+
+    public void setEndTitleDate(LocalDate endTitleDate) {
+        EndTitleDate = endTitleDate;
+    }
+
+    public LocalDate getContractDate() {
+        return ContractDate;
+    }
+
+    public void setContractDate(LocalDate contractDate) {
+        ContractDate = contractDate;
+    }
+
+    public BigDecimal getTotalAmountTND() {
+        return TotalAmountTND;
+    }
+
+    public void setTotalAmountTND(BigDecimal totalAmountTND) {
+        TotalAmountTND = totalAmountTND;
+    }
+
+    public BigDecimal getTotalAmountCurr() {
+        return TotalAmountCurr;
+    }
+
+    public void setTotalAmountCurr(BigDecimal totalAmountCurr) {
+        TotalAmountCurr = totalAmountCurr;
+    }
+
+    public BigDecimal getUsedAmountCurr() {
+        return usedAmountCurr;
+    }
+
+    public void setUsedAmountCurr(BigDecimal usedAmountCurr) {
+        this.usedAmountCurr = usedAmountCurr;
+    }
+
+    public BigDecimal getUsedAmountTND() {
+        return usedAmountTND;
+    }
+
+    public void setUsedAmountTND(BigDecimal usedAmountTND) {
+        this.usedAmountTND = usedAmountTND;
+    }
+
+    public BigDecimal getRemainingAmountCurr() {
+        return remainingAmountCurr;
+    }
+
+    public void setRemainingAmountCurr(BigDecimal remainingAmountCurr) {
+        this.remainingAmountCurr = remainingAmountCurr;
+    }
+
+    public BigDecimal getRemainingAmountTND() {
+        return remainingAmountTND;
+    }
+
+    public void setRemainingAmountTND(BigDecimal remainingAmountTND) {
+        this.remainingAmountTND = remainingAmountTND;
+    }
+
+    public Boolean getAdvancePayment() {
+        return isAdvancePayment;
+    }
+
+    public void setAdvancePayment(Boolean advancePayment) {
+        isAdvancePayment = advancePayment;
+    }
+
+    public BigDecimal getAdvancePaymentAmount() {
+        return advancePaymentAmount;
+    }
+
+    public void setAdvancePaymentAmount(BigDecimal advancePaymentAmount) {
+        this.advancePaymentAmount = advancePaymentAmount;
+    }
+
+    public Boolean getCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(Boolean cancelled) {
+        isCancelled = cancelled;
+    }
+
+    public LocalDate getClearanceDate() {
+        return clearanceDate;
+    }
+
+    public void setClearanceDate(LocalDate clearanceDate) {
+        this.clearanceDate = clearanceDate;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Pnom getTitleStatus() {
+        return titleStatus;
+    }
+
+    public void setTitleStatus(Pnom titleStatus) {
+        this.titleStatus = titleStatus;
+    }
+
+    public Pnom getTitleCode() {
+        return titleCode;
+    }
+
+    public void setTitleCode(Pnom titleCode) {
+        this.titleCode = titleCode;
+    }
+
+    public Pnom getCurrencyTitle() {
+        return CurrencyTitle;
+    }
+
+    public void setCurrencyTitle(Pnom currencyTitle) {
+        CurrencyTitle = currencyTitle;
+    }
 }
 

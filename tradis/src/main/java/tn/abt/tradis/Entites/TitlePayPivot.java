@@ -29,5 +29,35 @@ public class TitlePayPivot implements Serializable {
     @JoinColumn(name = "client_id", referencedColumnName = "id_client")
     private Client client;
 
+    public Long getIdP() {
+        return idP;
+    }
 
+    public void setIdP(Long idP) {
+        this.idP = idP;
+    }
+
+    public Title getTitle() {
+        return title;
+    }
+
+    public void setTitle(Title title) {
+        this.title = title;
+    }
+
+    public Settlement getSettlement() {
+        return settlement;
+    }
+
+    public void setSettlement(Settlement settlement) {
+        this.settlement = settlement;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
 }
