@@ -1,8 +1,6 @@
-// src/main/java/tn/abt/tradis/Service/TitleService.java
 package tn.abt.tradis.Service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,84 +11,117 @@ import tn.abt.tradis.Repository.*;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TitleService {
-
     private static final Logger logger = LoggerFactory.getLogger(TitleService.class);
 
-    @Autowired
-    private TitleRepository titleRepository;
-
-    @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ParameterRepository parameterRepository;
+    @Autowired private TitleRepository titleRepository;
+    @Autowired private ClientRepository clientRepository;
+    @Autowired private UserRepository userRepository;
+    @Autowired private ParameterRepository parameterRepository;
 
     @Transactional
     public Title createTitle(TitleCreationRequest request) {
+        logger.info("Creating title with request: {}", request);
 
-        String titleCode = request.getTitleCode() != null ? request.getTitleCode().trim() : null;
-        String titleStatus = request.getTitleStatusCode() != null ? request.getTitleStatusCode().trim() : null;
+        // Validation des champs
+        validateRequest(request);
 
-        if (titleCode == null || titleStatus == null) {
-            throw new IllegalArgumentException("Title code and status must not be null");
+        // Récupération des paramètres
+        Pnom titleCode = getTitleCode(request.getTitleCode());
+        Pnom titleStatus = getTitleStatus(request.getTitleStatusCode());
+        Pnom currency = getCurrency(request.getCurrencyCode());
+        Client client = getClient(request.getClientId());
+        User user = getUser(request.getUserId());
+
+        // Construction et sauvegarde
+        return buildAndSaveTitle(request, titleCode, titleStatus, currency, client, user);
+    }
+
+    private void validateRequest(TitleCreationRequest request) {
+        if (request.getTitleCode() == null || request.getTitleCode().trim().isEmpty()) {
+            throw new IllegalArgumentException("Le code titre est obligatoire");
+        }
+        if (request.getTitleStatusCode() == null || request.getTitleStatusCode().trim().isEmpty()) {
+            throw new IllegalArgumentException("Le statut du titre est obligatoire");
+        }
+        if (request.getCurrencyCode() == null || request.getCurrencyCode().trim().isEmpty()) {
+            throw new IllegalArgumentException("La devise est obligatoire");
         }
 
-        // Updated to match frontend dropdown
-        List<String> allowedTitleCnomCodes = List.of("021", "022", "031", "033");
-
-        Pnom titleCodeParam = allowedTitleCnomCodes.stream()
-                .map(cnom -> parameterRepository.findByCnomAndCacc(cnom, titleCode))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Invalid title code: " + titleCode + ". Not found in allowed cnom values: " + allowedTitleCnomCodes));
-
-        List<String> allowedStatusCnomCodes = List.of("007", "008");
-
-        Pnom titleStatusParam = allowedStatusCnomCodes.stream()
-                .map(cnom -> parameterRepository.findByCnomAndCacc(cnom, titleStatus))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Invalid title status: " + titleStatus + ". Not found in cnom values: " + allowedStatusCnomCodes));
-
-        if (request.getClientId() == null) {
-            throw new IllegalArgumentException("Client ID cannot be null");
+        // ✅ Valider ici les devises autorisées
+        List<String> allowedCurrencies = List.of("USD", "EUR", "TND");
+        if (!allowedCurrencies.contains(request.getCurrencyCode())) {
+            throw new IllegalArgumentException("Devise non supportée: " + request.getCurrencyCode());
         }
-        if (request.getUserId() == null) {
-            throw new IllegalArgumentException("User ID cannot be null");
+    }
+
+    private Pnom getTitleCode(String code) {
+        List<String> allowedCodes = List.of("021", "022", "031", "033");
+        if (!allowedCodes.contains(code)) {
+            throw new IllegalArgumentException("Code titre invalide. Valeurs autorisées: " + allowedCodes);
         }
 
-        Client client = clientRepository.findById(request.getClientId())
-                .orElseThrow(() -> new IllegalArgumentException("Client not found with ID: " + request.getClientId()));
+        return parameterRepository.findByCacc(code)
+                .orElseThrow(() -> {
+                    logger.error("Code titre non trouvé dans la base: {}", code);
+                    return new IllegalArgumentException("Code titre non configuré: " + code);
+                });
+    }
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + request.getUserId()));
-
-        String currencyCode = request.getCurrencyCode() != null ? request.getCurrencyCode().trim() : null;
-
-        List<Pnom> currencyList = parameterRepository.findAllByCnomAndLabel6("013", currencyCode);
-
-        if (currencyList.isEmpty()) {
-            logger.error("Currency code not found: cnom='013', label6='{}'", currencyCode);
-            throw new IllegalArgumentException("Currency code invalid: " + currencyCode);
+    private Pnom getTitleStatus(String status) {
+        List<String> allowedStatuses = List.of("007", "008");
+        if (!allowedStatuses.contains(status)) {
+            throw new IllegalArgumentException("Statut invalide. Valeurs autorisées: " + allowedStatuses);
         }
 
-        if (currencyList.size() > 1) {
-            logger.warn("More than one currency found for code '{}', using the first one", currencyCode);
+        return parameterRepository.findByCacc(status)
+                .orElseGet(() -> {
+                    // Create default status if not found
+                    Pnom defaultStatus = new Pnom();
+                    defaultStatus.setCacc(status);
+                    defaultStatus.setLabel1(status.equals("007") ? "Active" : "Inactive");
+                    return parameterRepository.save(defaultStatus);
+                });
+    }
+
+    private Pnom getCurrency(String currencyCode) {
+        return parameterRepository.findByCnomAndLabel1("014", currencyCode)
+                .or(() -> parameterRepository.findByCnomAndLabel2("014", currencyCode))
+                .or(() -> parameterRepository.findByCnomAndLabel3("014", currencyCode)) // Ajouté
+                .orElseThrow(() -> {
+                    logger.error("Devise non trouvée ou non supportée: {}", currencyCode);
+                    return new IllegalArgumentException("Devise non supportée: " + currencyCode);
+                });
+    }
+
+
+
+    private Client getClient(Long clientId) {
+        if (clientId == null) {
+            throw new IllegalArgumentException("L'ID client est obligatoire");
         }
+        return clientRepository.findById(clientId)
+                .orElseThrow(() -> {
+                    logger.error("Client non trouvé avec ID: {}", clientId);
+                    return new IllegalArgumentException("Client introuvable");
+                });
+    }
 
-        Pnom currency = currencyList.get(0);
+    private User getUser(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("L'ID utilisateur est obligatoire");
+        }
+        return userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    logger.error("Utilisateur non trouvé avec ID: {}", userId);
+                    return new IllegalArgumentException("Utilisateur introuvable");
+                });
+    }
 
+    private Title buildAndSaveTitle(TitleCreationRequest request, Pnom titleCode,
+                                    Pnom titleStatus, Pnom currency, Client client, User user) {
         Title title = new Title();
         title.setNumDom(request.getNumDom());
         title.setDomYear(request.getDomYear());
@@ -100,26 +131,19 @@ public class TitleService {
         title.setContractDate(request.getContractDate());
         title.setTotalAmountCurr(request.getTotalAmountCurr());
         title.setTotalAmountTND(request.getTotalAmountTND());
-
-        if (request.getTotalAmountCurr() != null) {
-            title.setUsedAmountCurr(BigDecimal.ZERO);
-            title.setRemainingAmountCurr(request.getTotalAmountCurr());
-        }
-
-        if (request.getTotalAmountTND() != null) {
-            title.setUsedAmountTND(BigDecimal.ZERO);
-            title.setRemainingAmountTND(request.getTotalAmountTND());
-        }
-
+        title.setUsedAmountCurr(BigDecimal.ZERO);
+        title.setUsedAmountTND(BigDecimal.ZERO);
+        title.setRemainingAmountCurr(request.getTotalAmountCurr());
+        title.setRemainingAmountTND(request.getTotalAmountTND());
         title.setIsAdvancePayment(request.getIsAdvancePayment());
         title.setAdvancePaymentAmount(request.getAdvancePaymentAmount());
         title.setIsCancelled(false);
         title.setClearanceDate(null);
+        title.setTitleCode(titleCode);
+        title.setTitleStatus(titleStatus);
+        title.setCurrencyTitle(currency);
         title.setClient(client);
         title.setUser(user);
-        title.setTitleStatus(titleStatusParam);
-        title.setTitleCode(titleCodeParam);
-        title.setCurrencyTitle(currency);
 
         return titleRepository.save(title);
     }
@@ -130,6 +154,6 @@ public class TitleService {
 
     public Title getTitleById(String numDom) {
         return titleRepository.findById(numDom)
-                .orElseThrow(() -> new IllegalArgumentException("Title not found: " + numDom));
+                .orElseThrow(() -> new IllegalArgumentException("Titre introuvable"));
     }
 }
