@@ -16,10 +16,14 @@ import java.util.List;
 public class TitleService {
     private static final Logger logger = LoggerFactory.getLogger(TitleService.class);
 
-    @Autowired private TitleRepository titleRepository;
-    @Autowired private ClientRepository clientRepository;
-    @Autowired private UserRepository userRepository;
-    @Autowired private ParameterRepository parameterRepository;
+    @Autowired
+    private TitleRepository titleRepository;
+    @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private ParameterRepository parameterRepository;
 
     @Transactional
     public Title createTitle(TitleCreationRequest request) {
@@ -50,7 +54,7 @@ public class TitleService {
             throw new IllegalArgumentException("La devise est obligatoire");
         }
 
-        // ✅ Valider ici les devises autorisées
+        // Valider les devises autorisées
         List<String> allowedCurrencies = List.of("USD", "EUR", "TND");
         if (!allowedCurrencies.contains(request.getCurrencyCode())) {
             throw new IllegalArgumentException("Devise non supportée: " + request.getCurrencyCode());
@@ -78,7 +82,6 @@ public class TitleService {
 
         return parameterRepository.findByCacc(status)
                 .orElseGet(() -> {
-                    // Create default status if not found
                     Pnom defaultStatus = new Pnom();
                     defaultStatus.setCacc(status);
                     defaultStatus.setLabel1(status.equals("007") ? "Active" : "Inactive");
@@ -89,14 +92,12 @@ public class TitleService {
     private Pnom getCurrency(String currencyCode) {
         return parameterRepository.findByCnomAndLabel1("014", currencyCode)
                 .or(() -> parameterRepository.findByCnomAndLabel2("014", currencyCode))
-                .or(() -> parameterRepository.findByCnomAndLabel3("014", currencyCode)) // Ajouté
+                .or(() -> parameterRepository.findByCnomAndLabel3("014", currencyCode))
                 .orElseThrow(() -> {
                     logger.error("Devise non trouvée ou non supportée: {}", currencyCode);
                     return new IllegalArgumentException("Devise non supportée: " + currencyCode);
                 });
     }
-
-
 
     private Client getClient(Long clientId) {
         if (clientId == null) {
@@ -135,9 +136,9 @@ public class TitleService {
         title.setUsedAmountTND(BigDecimal.ZERO);
         title.setRemainingAmountCurr(request.getTotalAmountCurr());
         title.setRemainingAmountTND(request.getTotalAmountTND());
-        title.setIsAdvancePayment(request.getIsAdvancePayment());
+        title.getAdvancePaymentAmount(request.getAdvancePaymentAmount()); // Corrigé ici
         title.setAdvancePaymentAmount(request.getAdvancePaymentAmount());
-        title.setIsCancelled(false);
+        title.setCancelled(false);
         title.setClearanceDate(null);
         title.setTitleCode(titleCode);
         title.setTitleStatus(titleStatus);
@@ -155,5 +156,52 @@ public class TitleService {
     public Title getTitleById(String numDom) {
         return titleRepository.findById(numDom)
                 .orElseThrow(() -> new IllegalArgumentException("Titre introuvable"));
+    }
+
+    @Transactional
+    public Title updateTitle(String numDom, TitleCreationRequest request) {
+        logger.info("Updating title {} with request: {}", numDom, request);
+
+        // Validation des champs
+        validateRequest(request);
+
+        // Récupérer le titre existant
+        Title existingTitle = getTitleById(numDom);
+
+        // Récupération des paramètres
+        Pnom titleCode = getTitleCode(request.getTitleCode());
+        Pnom titleStatus = getTitleStatus(request.getTitleStatusCode());
+        Pnom currency = getCurrency(request.getCurrencyCode());
+        Client client = getClient(request.getClientId());
+        User user = getUser(request.getUserId());
+
+        // Mise à jour des champs
+        existingTitle.setDomYear(request.getDomYear());
+        existingTitle.setDomDate(request.getDomDate());
+        existingTitle.setEndTitleDate(request.getEndTitleDate());
+        existingTitle.setContractNum(request.getContractNum());
+        existingTitle.setContractDate(request.getContractDate());
+        existingTitle.setTotalAmountCurr(request.getTotalAmountCurr());
+        existingTitle.setTotalAmountTND(request.getTotalAmountTND());
+        existingTitle.setAdvancePaymentAmount(request.getAdvancePaymentAmount()); // Corrigé ici
+        existingTitle.setAdvancePaymentAmount(request.getAdvancePaymentAmount());
+        existingTitle.setTitleCode(titleCode);
+        existingTitle.setTitleStatus(titleStatus);
+        existingTitle.setCurrencyTitle(currency);
+        existingTitle.setClient(client);
+        existingTitle.setUser(user);
+
+        // Recalculer les montants restants si nécessaire
+        BigDecimal usedAmountCurr = existingTitle.getUsedAmountCurr() != null ?
+                existingTitle.getUsedAmountCurr() : BigDecimal.ZERO;
+        BigDecimal usedAmountTND = existingTitle.getUsedAmountTND() != null ?
+                existingTitle.getUsedAmountTND() : BigDecimal.ZERO;
+
+        existingTitle.setRemainingAmountCurr(
+                request.getTotalAmountCurr().subtract(usedAmountCurr));
+        existingTitle.setRemainingAmountTND(
+                request.getTotalAmountTND().subtract(usedAmountTND));
+
+        return titleRepository.save(existingTitle);
     }
 }

@@ -17,8 +17,8 @@ public class Title implements Serializable {
 
 
     @Id
-    @Column(unique = true, length = 7)
-    private String NumDom; //numero de titre
+    @Column(name = "numDom", unique = true, length = 7)
+    private String numDom; //numero de titre
     private String DomYear; // annee de creation du titre
     private LocalDate DomDate; //date de creation du titre
     private LocalDate EndTitleDate;// date fin du titre
@@ -44,176 +44,111 @@ public class Title implements Serializable {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "title_status", referencedColumnName = "idParam")
+    @JoinColumn(name = "title_status", referencedColumnName = "id_param")
     private Pnom titleStatus; //etat du titre
 
     @ManyToOne
-    @JoinColumn(name = "title_code", referencedColumnName = "idParam")
+    @JoinColumn(name = "title_code", referencedColumnName = "id_param")
     private Pnom titleCode; //Le code titre
 
     @ManyToOne
-    @JoinColumn(name = "code_devise", referencedColumnName = "idParam")
+    @JoinColumn(name = "code_devise", referencedColumnName = "id_param")
     private Pnom CurrencyTitle;
-    // Getters
+
     public String getNumDom() {
-        return NumDom;
+        return numDom;
+    }
+
+    public void setNumDom(String numDom) {
+        this.numDom = numDom;
     }
 
     public String getDomYear() {
         return DomYear;
     }
 
+    public void setDomYear(String domYear) {
+        DomYear = domYear;
+    }
+
     public LocalDate getDomDate() {
         return DomDate;
+    }
+
+    public void setDomDate(LocalDate domDate) {
+        DomDate = domDate;
     }
 
     public LocalDate getEndTitleDate() {
         return EndTitleDate;
     }
 
-    public String getContractNum() {
-        return ContractNum;
+    public void setEndTitleDate(LocalDate endTitleDate) {
+        EndTitleDate = endTitleDate;
     }
 
     public LocalDate getContractDate() {
         return ContractDate;
     }
 
+    public void setContractDate(LocalDate contractDate) {
+        ContractDate = contractDate;
+    }
+
+    public String getContractNum() {
+        return ContractNum;
+    }
+
+    public void setContractNum(String contractNum) {
+        ContractNum = contractNum;
+    }
+
     public BigDecimal getTotalAmountCurr() {
         return TotalAmountCurr;
+    }
+
+    public void setTotalAmountCurr(BigDecimal totalAmountCurr) {
+        TotalAmountCurr = totalAmountCurr;
     }
 
     public BigDecimal getTotalAmountTND() {
         return TotalAmountTND;
     }
 
+    public void setTotalAmountTND(BigDecimal totalAmountTND) {
+        TotalAmountTND = totalAmountTND;
+    }
+
     public BigDecimal getUsedAmountCurr() {
         return usedAmountCurr;
-    }
-
-    public BigDecimal getUsedAmountTND() {
-        return usedAmountTND;
-    }
-
-    public BigDecimal getRemainingAmountCurr() {
-        return remainingAmountCurr;
-    }
-
-    public BigDecimal getRemainingAmountTND() {
-        return remainingAmountTND;
-    }
-
-    public Boolean getIsAdvancePayment() {
-        return isAdvancePayment;
-    }
-
-    public BigDecimal getAdvancePaymentAmount() {
-        return advancePaymentAmount;
-    }
-
-    public Boolean getIsCancelled() {
-        return isCancelled;
-    }
-
-    public LocalDate getClearanceDate() {
-        return clearanceDate;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Pnom getTitleStatus() {
-        return titleStatus;
-    }
-
-    public Pnom getTitleCode() {
-        return titleCode;
-    }
-
-    // Setters
-    public void setNumDom(String numDom) {
-        this.NumDom = numDom;
-    }
-
-    public void setDomYear(String domYear) {
-        this.DomYear = domYear;
-    }
-
-    public void setDomDate(LocalDate domDate) {
-        this.DomDate = domDate;
-    }
-
-    public void setEndTitleDate(LocalDate endTitleDate) {
-        this.EndTitleDate = endTitleDate;
-    }
-
-    public void setContractNum(String contractNum) {
-        this.ContractNum = contractNum;
-    }
-
-    public void setContractDate(LocalDate contractDate) {
-        this.ContractDate = contractDate;
-    }
-
-    public void setTotalAmountCurr(BigDecimal totalAmountCurr) {
-        this.TotalAmountCurr = totalAmountCurr;
-    }
-
-    public void setTotalAmountTND(BigDecimal totalAmountTND) {
-        this.TotalAmountTND = totalAmountTND;
     }
 
     public void setUsedAmountCurr(BigDecimal usedAmountCurr) {
         this.usedAmountCurr = usedAmountCurr;
     }
 
+    public BigDecimal getUsedAmountTND() {
+        return usedAmountTND;
+    }
+
     public void setUsedAmountTND(BigDecimal usedAmountTND) {
         this.usedAmountTND = usedAmountTND;
+    }
+
+    public BigDecimal getRemainingAmountCurr() {
+        return remainingAmountCurr;
     }
 
     public void setRemainingAmountCurr(BigDecimal remainingAmountCurr) {
         this.remainingAmountCurr = remainingAmountCurr;
     }
 
+    public BigDecimal getRemainingAmountTND() {
+        return remainingAmountTND;
+    }
+
     public void setRemainingAmountTND(BigDecimal remainingAmountTND) {
         this.remainingAmountTND = remainingAmountTND;
-    }
-
-    public void setIsAdvancePayment(Boolean isAdvancePayment) {
-        this.isAdvancePayment = isAdvancePayment;
-    }
-
-    public void setAdvancePaymentAmount(BigDecimal advancePaymentAmount) {
-        this.advancePaymentAmount = advancePaymentAmount;
-    }
-
-    public void setIsCancelled(Boolean isCancelled) {
-        this.isCancelled = isCancelled;
-    }
-
-    public void setClearanceDate(LocalDate clearanceDate) {
-        this.clearanceDate = clearanceDate;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setTitleStatus(Pnom titleStatus) {
-        this.titleStatus = titleStatus;
-    }
-
-    public void setTitleCode(Pnom titleCode) {
-        this.titleCode = titleCode;
     }
 
     public Boolean getAdvancePayment() {
@@ -224,6 +159,14 @@ public class Title implements Serializable {
         isAdvancePayment = advancePayment;
     }
 
+    public BigDecimal getAdvancePaymentAmount(BigDecimal advancePaymentAmount) {
+        return this.advancePaymentAmount;
+    }
+
+    public void setAdvancePaymentAmount(BigDecimal advancePaymentAmount) {
+        this.advancePaymentAmount = advancePaymentAmount;
+    }
+
     public Boolean getCancelled() {
         return isCancelled;
     }
@@ -232,11 +175,51 @@ public class Title implements Serializable {
         isCancelled = cancelled;
     }
 
+    public LocalDate getClearanceDate() {
+        return clearanceDate;
+    }
+
+    public void setClearanceDate(LocalDate clearanceDate) {
+        this.clearanceDate = clearanceDate;
+    }
+
     public Pnom getCurrencyTitle() {
         return CurrencyTitle;
     }
 
     public void setCurrencyTitle(Pnom currencyTitle) {
         CurrencyTitle = currencyTitle;
+    }
+
+    public Pnom getTitleCode() {
+        return titleCode;
+    }
+
+    public void setTitleCode(Pnom titleCode) {
+        this.titleCode = titleCode;
+    }
+
+    public Pnom getTitleStatus() {
+        return titleStatus;
+    }
+
+    public void setTitleStatus(Pnom titleStatus) {
+        this.titleStatus = titleStatus;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

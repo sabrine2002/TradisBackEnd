@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS parameters (
+CREATE TABLE IF NOT EXISTS Parameters (
                                           id_param BIGINT AUTO_INCREMENT PRIMARY KEY,
                                           cnom VARCHAR(50),
     cacc VARCHAR(50),
@@ -39,32 +39,34 @@ CREATE TABLE IF NOT EXISTS clients (
                                        id_client BIGINT AUTO_INCREMENT PRIMARY KEY,
                                        Firstname VARCHAR(50) NOT NULL,
     Lastname VARCHAR(50),
-    nationality VARCHAR(3),
+    nationality BIGINT,
     resident BOOLEAN NOT NULL,
-    accountType VARCHAR(50) NOT NULL,
-    DocumentType VARCHAR(50) NOT NULL,
-    accountcurrency VARCHAR(3) NOT NULL,
+    accountType BIGINT NOT NULL,
+    DocumentType BIGINT NOT NULL,
+    accountcurrency BIGINT NOT NULL,
     accountINT VARCHAR(20) NOT NULL,
-    agency VARCHAR(10),
+    agency BIGINT,
     accountCreationDate DATE,
     accountColsureDate DATE,
     created_by BIGINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_by BIGINT,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (nationality) REFERENCES parameters(cnom),
-    FOREIGN KEY (accountType) REFERENCES parameters(cnom),
-    FOREIGN KEY (DocumentType) REFERENCES parameters(cnom),
-    FOREIGN KEY (accountcurrency) REFERENCES parameters(cnom),
-    FOREIGN KEY (agency) REFERENCES parameters(cnom),
-    CONSTRAINT unique_client_row UNIQUE (Firstname, Lastname, nationality, accountINT)
 
+    FOREIGN KEY (nationality) REFERENCES Parameters(id_param),
+    FOREIGN KEY (accountType) REFERENCES Parameters(id_param),
+    FOREIGN KEY (DocumentType) REFERENCES Parameters(id_param),
+    FOREIGN KEY (accountcurrency) REFERENCES Parameters(id_param),
+    FOREIGN KEY (agency) REFERENCES Parameters(id_param),
+
+    CONSTRAINT unique_client_row UNIQUE (Firstname, Lastname, nationality, accountINT)
     );
 
 
 
 
-INSERT IGNORE INTO parameters (cnom, cacc, label1, label2, label3, label4, label5, label6, label7, label8) VALUES
+
+INSERT IGNORE INTO Parameters (cnom, cacc, label1, label2, label3, label4, label5, label6, label7, label8) VALUES
     ('001', '001', 'Type_personne', 'PP', 'Personne Physique', NULL, NULL, NULL, NULL, NULL),
     ('001', '002', 'Type_personne', 'PM', 'Personne Morale', NULL, NULL, NULL, NULL, NULL),
     ('002', '003', 'Type_document','CIN', 'Carte d''Identité Nationale', NULL, NULL, NULL, NULL, NULL),
@@ -524,6 +526,7 @@ INSERT IGNORE INTO parameters (cnom, cacc, label1, label2, label3, label4, label
     ('014', 440, 'Devise', 'X71', 'ULP', 'LIVRE DE L''IRLANDE DU NORD', NULL, NULL, NULL, NULL),
     ('014', 441, 'Devise', 'X72', 'JEP', 'LIVRE DE JERSEY', NULL, NULL, NULL, NULL),
     ('014', 442, 'Devise', 'X73', 'GUP', 'LIVRE GUERNSEY', NULL, NULL, NULL, NULL),
+
 ('015', '444', 'Agence', '140', 'ZAHROUNI', 'ANGLE RUE 4366 ET RUE MARTYRE HMIDA ECHAHED ZAHROUNI', NULL, NULL, NULL, NULL),
 ('015', '445', 'Agence', '135', 'MONASTIR EL HELIA', 'IMMEUBLE RHIM CENTRE AV. TAIEB MHIRI MONASTIR', NULL, NULL, NULL, NULL),
 ('015', '446', 'Agence', '139', 'MANOUBA', '1 AV.HABIB BOURGUIBA MANOUBA', NULL, NULL, NULL, NULL),
@@ -537,7 +540,7 @@ INSERT IGNORE INTO parameters (cnom, cacc, label1, label2, label3, label4, label
 ('015', '454', 'Agence', '144', 'LES JASMINS', 'AV. HABIB BOURGUIBA NOUVELLE ARIANA', NULL, NULL, NULL, NULL),
 ('015', '455', 'Agence', '146', 'CITE EL KHADHRA', 'ANGLE D AV. LOUIS BRAILLE ET RUE MOHAMED CHNIK CITE EL KHADHRA', NULL, NULL, NULL, NULL),
 ('015', '456', 'Agence', '147', 'DAR FADHAL', 'RESIDENCE SALMA AV. TAIEB MHIRI LAOUINA DAR FADHAL', NULL, NULL, NULL, NULL),
-('015', '457', 'Agence', '148', 'BAB SAADOUN', 'IMMEUBLE N°5 AV.9 AVRIL BAB SAADOUN TUNIS', NULL, NULL, NULL, NULL),
+('015', '457', 'Agence', '148', 'BAB SAADOUN', 'IMMEUBLE N AV.9 AVRIL BAB SAADOUN TUNIS', NULL, NULL, NULL, NULL),
 ('015', '458', 'Agence', '149', 'SFAX MOULINVILLE', 'RESIDENCE LES JASMINS ROUTE DE TUNIS KM 1,5 MOULINVILLE SFAX', NULL, NULL, NULL, NULL),
 ('015', '459', 'Agence', '019', 'BEN GARDANE', '', NULL, NULL, NULL, NULL),
 ('015', '460', 'Agence', '150', 'MENZAH 5', '18 AV. DE LA LIBERTE EL MENZAH 5', NULL, NULL, NULL, NULL),
@@ -682,7 +685,7 @@ INSERT IGNORE INTO parameters (cnom, cacc, label1, label2, label3, label4, label
 ('015', '599', 'Agence', '229', 'JARDINS EL MENZAH', 'RDC DE LIMMEUBLE AL MANZEH AL AALIA', NULL, NULL, NULL, NULL),
 ('015', '600', 'Agence', '231', 'SFAX MENZEL CHAKER', 'ROUTE MENZEL CHAKER SFAX', NULL, NULL, NULL, NULL),
 ('015', '601', 'Agence', '232', 'LES JARDINS DE CARTHAGE', 'LOTISSEMENT LES JARDINS DE CARTHAGEHORZON CARTHAGE', NULL, NULL, NULL, NULL),
-('015', '602', 'Agence', '233', 'MNIHLA', 'ROUTE DE BIZERTE -MNIHLA', NULL, NULL, NULL, NULL),
+('015', '602', 'Agence', '233', 'MNIHLA', 'ROUTE DE BIZERTE MNIHLA', NULL, NULL, NULL, NULL),
 ('015', '603', 'Agence', '100', 'AGENCE WE BANK', 'ATTIJARI WEB', NULL, NULL, NULL, NULL),
 ('015', '604', 'Agence', '234', 'AGENCE GOLAA', 'CITE IZDIHAR 20 MARS GOLAA', NULL, NULL, NULL, NULL),
 ('015', '605', 'Agence', '235', 'SUCCURSALE ENTREPRISE DE BIZERTE', '142.ROUTE CORNICHE-ERRAOUABI BIZERT', NULL, NULL, NULL, NULL),
@@ -696,7 +699,7 @@ INSERT IGNORE INTO parameters (cnom, cacc, label1, label2, label3, label4, label
 ('015', '613', 'Agence', '047', 'MENZEL JEMIL', '', NULL, NULL, NULL, NULL),
 ('015', '614', 'Agence', '061', 'MENZEL BOURGUIBA', '', NULL, NULL, NULL, NULL),
 ('015', '615', 'Agence', '066', 'JERBA AJIM', '', NULL, NULL, NULL, NULL),
-('015', '616', 'Agence', '067', 'M SAKEN', '', NULL, NULL, NULL, NULL),
+('015', '616', 'Agence', '067', 'MSAKEN', '', NULL, NULL, NULL, NULL),
 ('015', '617', 'Agence', '059', 'LE KEF', '', NULL, NULL, NULL, NULL),
 ('015', '618', 'Agence', '071', 'MONGI SLIM', '', NULL, NULL, NULL, NULL),
 ('015', '619', 'Agence', '072', 'DJERISSA', '', NULL, NULL, NULL, NULL),
@@ -735,11 +738,11 @@ INSERT IGNORE INTO parameters (cnom, cacc, label1, label2, label3, label4, label
 ('015', '652', 'Agence', '129', 'ZAGHOUANE', 'AV.DE LINDEPENDANCE ZAGHOUANE', NULL, NULL, NULL, NULL),
 ('015', '653', 'Agence', '128', 'EZZOUHOUR', '20 BIS RUE 4001 CITE EZZOUHOUR 2', NULL, NULL, NULL, NULL),
 ('015', '654', 'Agence', '138', 'EL HRAIRIA', 'N°233 AV.HRAIRIA EL HRAIRIA', NULL, NULL, NULL, NULL);
-ALTER TABLE parameters
+
+ALTER TABLE Parameters
     ADD CONSTRAINT unique_cnom_cacc UNIQUE (cnom, cacc);
 
-
-INSERT IGNORE INTO pdnom (cnom, description) VALUES
+INSERT INTO pdnom (cnom, description) VALUES
                                           ('001', 'Type_personne'),
                                           ('002', 'Type_document'),
                                           ('003', 'Autorisation d''exportation simple sortie'),

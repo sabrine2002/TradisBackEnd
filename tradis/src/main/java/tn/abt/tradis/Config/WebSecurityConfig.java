@@ -67,6 +67,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/titles/**").hasRole("AGENT")
                         .requestMatchers("/api/settlements/**").hasRole("AGENT")
                         .requestMatchers("/api/auth/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/settlements/**").hasRole("AGENT")
 
                         //.requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()

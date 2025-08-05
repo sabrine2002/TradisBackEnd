@@ -17,11 +17,11 @@ public class Product implements Serializable {
     private Long idProduct;
 
     @ManyToOne
-    @JoinColumn(name = "productCode", referencedColumnName = "idParam")
+    @JoinColumn(name = "productCode", referencedColumnName = "id_param")
     private Pnom productCode;
 
     @ManyToOne
-    @JoinColumn(name = "productType", referencedColumnName = "idParam")
+    @JoinColumn(name = "productType", referencedColumnName = "id_param")
     private Pnom productType;
 
     private String productLabel;

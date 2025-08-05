@@ -2,11 +2,14 @@ package tn.abt.tradis.Controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.abt.tradis.Config.TitleCreationRequest;
+import tn.abt.tradis.Config.TitleDTO;
 import tn.abt.tradis.Entites.Title;
+import tn.abt.tradis.Repository.TitleRepository;
 import tn.abt.tradis.Service.TitleService;
 
 import java.util.List;
@@ -18,6 +21,8 @@ public class TitleController {
 
     private final TitleService titleService;
 
+    @Autowired
+    private TitleRepository titleRepository;
     public TitleController(TitleService titleService) {
         this.titleService = titleService;
     }
@@ -35,17 +40,15 @@ public class TitleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Title>> getAllTitles() {
-        return ResponseEntity.ok(titleService.getAllTitles());
+    public List<Title> getAllTitles() {
+        return titleRepository.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getTitleById(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(titleService.getTitleById(id));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    @GetMapping("/{numDom}")
+    public TitleDTO getTitleById(@PathVariable String numDom) {
+        Title title = titleRepository.findById(numDom)
+                .orElseThrow(() -> new IllegalArgumentException("Title not found: " + numDom));
+        return new TitleDTO(title);
     }
 
     @GetMapping("/codes")
@@ -69,5 +72,16 @@ public class TitleController {
     @GetMapping("/currencies")
     public ResponseEntity<List<String>> getCurrencies() {
         return ResponseEntity.ok(List.of("USD", "EUR", "TND"));
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTitle(@PathVariable String id, @RequestBody TitleCreationRequest request) {
+        try {
+            Title updatedTitle = titleService.updateTitle(id, request);
+            return ResponseEntity.ok(updatedTitle);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error: " + e.getMessage());
+        }
     }
 }
