@@ -65,9 +65,10 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/titles/**").permitAll()
                         .requestMatchers("/api/parameters/**").permitAll()
                         .requestMatchers("/api/titles/**").hasRole("AGENT")
-                        .requestMatchers("/api/settlements/**").hasRole("AGENT")
                         .requestMatchers("/api/auth/admin").hasRole("ADMIN")
-                        .requestMatchers("/api/settlements/**").hasRole("AGENT")
+                        .requestMatchers("/api/user/count-agents").permitAll()
+                        .requestMatchers("/api/settlements/**").permitAll()
+                        .requestMatchers("/api/settlements/create").hasRole("AGENT")
 
                         //.requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()

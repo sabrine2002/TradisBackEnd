@@ -14,7 +14,11 @@ import tn.abt.tradis.Repository.TitleRepository;
 import tn.abt.tradis.Service.TitleService;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -107,4 +111,32 @@ public class TitleController {
                     .body("Erreur serveur: " + e.getMessage());
         }
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> countTitles() {
+        return ResponseEntity.ok(titleRepository.countAllTitles());
+    }
+
+
+    @GetMapping("/created-by-month")
+    public List<Map<String, Object>> getTitlesCreatedByMonth() {
+        List<Title> titles = titleRepository.findAll();
+
+        return titles.stream()
+                .filter(title -> title.getDomDate() != null)
+                .collect(Collectors.groupingBy(
+                        title -> title.getDomDate().withDayOfMonth(1),  // Regroupe par début de mois
+                        Collectors.counting()
+                ))
+                .entrySet().stream()
+                .map(entry -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("x", entry.getKey());  // LocalDate (ex: 2025-08-01)
+                    map.put("y", entry.getValue()); // Nombre de titres
+                    return map;
+                })
+                .sorted(Comparator.comparing(m -> (LocalDate) m.get("x")))
+                .collect(Collectors.toList());
+    }
+
 }

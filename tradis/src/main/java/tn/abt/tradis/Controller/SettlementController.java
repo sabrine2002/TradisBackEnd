@@ -3,6 +3,7 @@ package tn.abt.tradis.Controller;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.abt.tradis.Config.*;
@@ -16,6 +17,7 @@ import tn.abt.tradis.Entites.Settlement;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -97,6 +99,15 @@ public class SettlementController {
                         p.getCnom()  // Code de la devise
                 ))
                 .collect(Collectors.toList());
+    }
+    @GetMapping("/count")
+    public long getTotalSettlements() {
+        return settlementService.countAllSettlements();
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Long>> getSettlementStats() {
+        return ResponseEntity.ok(settlementService.getSettlementStats());
     }
 
 

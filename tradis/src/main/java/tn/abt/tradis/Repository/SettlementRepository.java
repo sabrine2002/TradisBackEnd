@@ -11,7 +11,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface SettlementRepository extends JpaRepository<Settlement, Long> {
+    @Query("SELECT COUNT(s) FROM Settlement s")
+    long countAllSettlements();
 
+    long countBySettlementStatus(SettlementStatus settlementStatus);
 
     @Query("SELECT s FROM Settlement s " +
             "WHERE (:startDate IS NULL OR s.SettlementDate >= :startDate) " +

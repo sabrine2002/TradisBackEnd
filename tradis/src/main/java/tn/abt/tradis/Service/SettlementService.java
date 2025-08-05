@@ -18,7 +18,9 @@ import tn.abt.tradis.Config.SettlementWithLabelsDTO;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -297,6 +299,20 @@ public class SettlementService {
         return settlements.stream()
                 .map(SettlementWithLabelsDTO::new)
                 .collect(Collectors.toList());
+    }
+    public long countAllSettlements() {
+        return settlementRepository.countAllSettlements();
+    }
+
+
+    public Map<String, Long> getSettlementStats() {
+        logger.info("Fetching settlement statistics");
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("valid", settlementRepository.countBySettlementStatus(SettlementStatus.VALIDATED));
+        stats.put("pending", settlementRepository.countBySettlementStatus(SettlementStatus.PENDING));
+        stats.put("rejected", settlementRepository.countBySettlementStatus(SettlementStatus.REJECTED));
+        logger.info("Settlement stats: {}", stats);
+        return stats;
     }
 
 }
