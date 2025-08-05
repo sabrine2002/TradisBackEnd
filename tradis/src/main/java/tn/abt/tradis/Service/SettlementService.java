@@ -275,5 +275,28 @@ public class SettlementService {
     }
 
 
+    public List<SettlementWithLabelsDTO> filterSettlements(
+            String startDate,
+            String endDate,
+            BigDecimal minAmountLC,
+            BigDecimal maxAmountLC,
+            BigDecimal minAmountFC,
+            BigDecimal maxAmountFC,
+            Long countryId,
+            Long currencyId,
+            String numDom,
+            SettlementStatus status
+    ) {
+        LocalDate start = startDate != null ? LocalDate.parse(startDate) : null;
+        LocalDate end = endDate != null ? LocalDate.parse(endDate) : null;
+
+        List<Settlement> settlements = settlementRepository.findByFilters(
+                start, end, minAmountLC, maxAmountLC, minAmountFC, maxAmountFC, countryId, currencyId, numDom, status
+        );
+
+        return settlements.stream()
+                .map(SettlementWithLabelsDTO::new)
+                .collect(Collectors.toList());
+    }
 
 }

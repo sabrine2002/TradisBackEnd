@@ -1,7 +1,7 @@
 package tn.abt.tradis.Controller;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,7 @@ import tn.abt.tradis.Config.TitleWithLabelsDTO;
 import tn.abt.tradis.Entites.Title;
 import tn.abt.tradis.Repository.TitleRepository;
 import tn.abt.tradis.Service.TitleService;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,10 +22,13 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 public class TitleController {
 
+    private static final Logger logger = LoggerFactory.getLogger(TitleController.class);
+
     private final TitleService titleService;
 
     @Autowired
     private TitleRepository titleRepository;
+
     public TitleController(TitleService titleService) {
         this.titleService = titleService;
     }
@@ -33,31 +37,39 @@ public class TitleController {
     public ResponseEntity<?> createTitle(@RequestBody TitleCreationRequest request) {
         try {
             Title title = titleService.createTitle(request);
-            return ResponseEntity.ok(title);
+            logger.info("Title created successfully: {}", title.getNumDom());
+            return ResponseEntity.ok(new TitleWithLabelsDTO(title));
         } catch (IllegalArgumentException e) {
+            logger.error("Validation error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (HttpMessageNotWritableException e) {
+            logger.error("Serialization error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur de sérialisation: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error: " + e.getMessage());
+            logger.error("Unexpected error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur serveur: " + e.getMessage());
         }
     }
 
     @GetMapping
-    public List<Title> getAllTitles() {
-        return titleRepository.findAll();
+    public List<TitleWithLabelsDTO> getAllTitles() {
+        return titleService.getAllTitlesWithLabels();
     }
+
     @GetMapping("/with-labels")
     public List<TitleWithLabelsDTO> getAllTitlesWithLabels() {
-        List<Title> titles = titleRepository.findAll();
-
-        return titles.stream()
-                .map(TitleWithLabelsDTO::new)  // pour chaque Title on crée un DTO
-                .collect(Collectors.toList());
+        return titleService.getAllTitlesWithLabels();
     }
 
     @GetMapping("/{numDom}")
     public TitleDTO getTitleById(@PathVariable String numDom) {
         Title title = titleRepository.findById(numDom)
-                .orElseThrow(() -> new IllegalArgumentException("Title not found: " + numDom));
+                .orElseThrow(() -> {
+                    logger.error("Title not found: {}", numDom);
+                    return new IllegalArgumentException("Title not found: " + numDom);
+                });
         return new TitleDTO(title);
     }
 
@@ -71,27 +83,28 @@ public class TitleController {
         return ResponseEntity.ok(List.of("007", "008"));
     }
 
-
-    // Classe DTO pour la réponse
-    @Data
-    @AllArgsConstructor
-    class CurrencyResponse {
-        private String code;  // USD, EUR, etc.
-        private String name;  // Dollar des USA, Euro, etc.
-    }
     @GetMapping("/currencies")
     public ResponseEntity<List<String>> getCurrencies() {
         return ResponseEntity.ok(List.of("USD", "EUR", "TND"));
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateTitle(@PathVariable String id, @RequestBody TitleCreationRequest request) {
         try {
             Title updatedTitle = titleService.updateTitle(id, request);
-            return ResponseEntity.ok(updatedTitle);
+            logger.info("Title updated successfully: {}", id);
+            return ResponseEntity.ok(new TitleWithLabelsDTO(updatedTitle));
         } catch (IllegalArgumentException e) {
+            logger.error("Validation error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (HttpMessageNotWritableException e) {
+            logger.error("Serialization error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur de sérialisation: " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Server error: " + e.getMessage());
+            logger.error("Unexpected error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur serveur: " + e.getMessage());
         }
     }
 }

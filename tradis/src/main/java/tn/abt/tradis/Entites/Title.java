@@ -7,6 +7,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -34,7 +35,8 @@ public class Title implements Serializable {
     private BigDecimal advancePaymentAmount; // montant Acompte
     private Boolean isCancelled = false; // titre annule
     private LocalDate clearanceDate; // date Apurement
-
+    @Column(name = "last_updated_date", nullable = true)
+    private LocalDateTime lastUpdatedDate ;
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client client;
@@ -221,5 +223,17 @@ public class Title implements Serializable {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public LocalDateTime getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(LocalDateTime lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    public BigDecimal getAdvancePaymentAmount() {
+        return advancePaymentAmount;
     }
 }
