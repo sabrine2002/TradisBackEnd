@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.abt.tradis.Config.TitleCreationRequest;
 import tn.abt.tradis.Config.TitleDTO;
+import tn.abt.tradis.Config.TitleWithLabelsDTO;
 import tn.abt.tradis.Entites.Title;
 import tn.abt.tradis.Repository.TitleRepository;
 import tn.abt.tradis.Service.TitleService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/titles")
@@ -42,6 +44,14 @@ public class TitleController {
     @GetMapping
     public List<Title> getAllTitles() {
         return titleRepository.findAll();
+    }
+    @GetMapping("/with-labels")
+    public List<TitleWithLabelsDTO> getAllTitlesWithLabels() {
+        List<Title> titles = titleRepository.findAll();
+
+        return titles.stream()
+                .map(TitleWithLabelsDTO::new)  // pour chaque Title on crée un DTO
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{numDom}")

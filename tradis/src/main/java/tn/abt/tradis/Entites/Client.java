@@ -56,4 +56,109 @@ public class Client implements Serializable {
 
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TitlePayPivot> titlePayPivots;
+
+
+    public long getIdCli() {
+        return idCli;
+    }
+
+    public void setIdCli(long idCli) {
+        this.idCli = idCli;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public boolean isResident() {
+        return resident;
+    }
+
+    public void setResident(boolean resident) {
+        this.resident = resident;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public String getAgency() {
+        return agency;
+    }
+
+    public void setAgency(String agency) {
+        this.agency = agency;
+    }
+
+    public LocalDate getAccountCreationDate() {
+        return accountCreationDate;
+    }
+
+    public void setAccountCreationDate(LocalDate accountCreationDate) {
+        this.accountCreationDate = accountCreationDate;
+    }
+
+    public LocalDate getAccountColsureDate() {
+        return accountColsureDate;
+    }
+
+    public void setAccountColsureDate(LocalDate accountColsureDate) {
+        this.accountColsureDate = accountColsureDate;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
+    public String getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(String documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getAccountcurrency() {
+        return accountcurrency;
+    }
+
+    public void setAccountcurrency(String accountcurrency) {
+        this.accountcurrency = accountcurrency;
+    }
+
+    public List<TitlePayPivot> getTitlePayPivots() {
+        return titlePayPivots;
+    }
+
+    public void setTitlePayPivots(List<TitlePayPivot> titlePayPivots) {
+        this.titlePayPivots = titlePayPivots;
+    }
 }

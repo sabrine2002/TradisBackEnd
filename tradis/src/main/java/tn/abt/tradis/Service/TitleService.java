@@ -6,11 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.abt.tradis.Config.TitleCreationRequest;
+import tn.abt.tradis.Config.TitleWithLabelsDTO;
 import tn.abt.tradis.Entites.*;
 import tn.abt.tradis.Repository.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TitleService {
@@ -204,4 +206,13 @@ public class TitleService {
 
         return titleRepository.save(existingTitle);
     }
+
+
+    public List<TitleWithLabelsDTO> getAllTitlesWithLabels() {
+        List<Title> titles = titleRepository.findAll();
+        return titles.stream()
+                .map(TitleWithLabelsDTO::new)
+                .collect(Collectors.toList());
+    }
+
 }
