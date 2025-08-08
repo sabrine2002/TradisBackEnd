@@ -3,6 +3,7 @@ package tn.abt.tradis.Entites;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tn.abt.tradis.Enum.TitileStatus;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -56,6 +57,9 @@ public class Title implements Serializable {
     @ManyToOne
     @JoinColumn(name = "code_devise", referencedColumnName = "id_param")
     private Pnom CurrencyTitle;
+    @ManyToOne
+    @JoinColumn(name = "titile_Status", referencedColumnName = "id_param")
+    private Pnom titileStatus;
 
     public String getNumDom() {
         return numDom;
@@ -235,5 +239,13 @@ public class Title implements Serializable {
 
     public BigDecimal getAdvancePaymentAmount() {
         return advancePaymentAmount;
+    }
+
+    public Pnom getTitileStatus() {
+        return titileStatus;
+    }
+
+    public void setTitileStatus(Pnom titileStatus) {
+        this.titileStatus = titileStatus;
     }
 }

@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tn.abt.tradis.Config.TitleCreationRequest;
-import tn.abt.tradis.Config.TitleDTO;
-import tn.abt.tradis.Config.TitleWithLabelsDTO;
+import tn.abt.tradis.Config.*;
+import tn.abt.tradis.Entites.Client;
+import tn.abt.tradis.Entites.Pnom;
 import tn.abt.tradis.Entites.Title;
+import tn.abt.tradis.Repository.ParameterRepository;
 import tn.abt.tradis.Repository.TitleRepository;
 import tn.abt.tradis.Service.TitleService;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -29,7 +30,8 @@ public class TitleController {
     private static final Logger logger = LoggerFactory.getLogger(TitleController.class);
 
     private final TitleService titleService;
-
+    @Autowired
+    private ParameterRepository paramRepository;
     @Autowired
     private TitleRepository titleRepository;
 
@@ -39,6 +41,11 @@ public class TitleController {
 
     @PostMapping
     public ResponseEntity<?> createTitle(@RequestBody TitleCreationRequest request) {
+        logger.info("Received request: {}", request);
+        if (request.getClientId() == null) {
+            logger.error("Client ID is null");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Client ID is required");
+        }
         try {
             Title title = titleService.createTitle(request);
             logger.info("Title created successfully: {}", title.getNumDom());
@@ -77,27 +84,30 @@ public class TitleController {
         return new TitleDTO(title);
     }
 
+
+
+
     @GetMapping("/codes")
     public ResponseEntity<List<String>> getTitleCodes() {
         return ResponseEntity.ok(List.of("021", "022", "031", "033"));
     }
 
-    @GetMapping("/statuses")
-    public ResponseEntity<List<String>> getTitleStatuses() {
-        return ResponseEntity.ok(List.of("007", "008"));
-    }
 
-    @GetMapping("/currencies")
-    public ResponseEntity<List<String>> getCurrencies() {
-        return ResponseEntity.ok(List.of("USD", "EUR", "TND"));
-    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateTitle(@PathVariable String id, @RequestBody TitleCreationRequest request) {
+
+    @PutMapping("/{numDom}")
+    public ResponseEntity<?>  updateTitle(
+            @PathVariable String numDom,
+            @RequestBody TitleUpdateRequest request
+    ){     logger.info("Received request: {}", request);
+        if (request.getClientId() == null) {
+            logger.error("Client ID is null");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Client ID is required");
+        }
         try {
-            Title updatedTitle = titleService.updateTitle(id, request);
-            logger.info("Title updated successfully: {}", id);
-            return ResponseEntity.ok(new TitleWithLabelsDTO(updatedTitle));
+            Title title = titleService.updateTitle(numDom,request);
+            logger.info("Title created successfully: {}", title.getNumDom());
+            return ResponseEntity.ok(new TitleWithLabelsDTO(title));
         } catch (IllegalArgumentException e) {
             logger.error("Validation error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -111,6 +121,7 @@ public class TitleController {
                     .body("Erreur serveur: " + e.getMessage());
         }
     }
+
 
     @GetMapping("/count")
     public ResponseEntity<Long> countTitles() {
@@ -137,6 +148,35 @@ public class TitleController {
                 })
                 .sorted(Comparator.comparing(m -> (LocalDate) m.get("x")))
                 .collect(Collectors.toList());
+    }
+    @GetMapping("/currencies")
+    public List<DropdownOptionTitle> getCurrencies() {
+        List<Pnom> currencies = paramRepository.findByCnom("014");
+        return currencies.stream()
+                .map(p -> new DropdownOptionTitle(
+                        p.getIdParam(),
+                        p.getCnom(),
+                        p.getLabel4() // Nom de la devise
+                        // Code de la devise
+                ))
+                .collect(Collectors.toList());
+    }
+    @GetMapping("/statuses")
+    public List<PnomDTO> getTitleStatuses() {
+        return paramRepository.findByCnom("007")
+                .stream()
+                .map(pnom -> new PnomDTO(pnom.getCacc(), pnom.getLabel1()))
+                .collect(Collectors.toList());
+    }
+
+
+    @GetMapping("/clients")
+    public ResponseEntity<List<DropDownOptionT>> getAllClients() {
+        List<Client> clients = titleService.getAllClients();
+        List<DropDownOptionT> clientOptions = clients.stream()
+                .map(client -> new DropDownOptionT(client.getIdCli(), client.getIdCli(), client.getFirstname()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(clientOptions);
     }
 
 }

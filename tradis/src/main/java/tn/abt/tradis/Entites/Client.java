@@ -20,15 +20,15 @@ public class Client implements Serializable {
     @Column(name = "id_client", unique = true, nullable = false, length = 7)
     private long idCli;
 
-
     @Column(name = "Firstname", nullable = false, length = 50)
     private String firstname;
 
     @Column(name = "Lastname", length = 50)
     private String lastname;
 
-    @Column(name = "nationality", length = 50)
-    private String nationality; // Changed to String
+    @ManyToOne
+    @JoinColumn(name = "nationality",referencedColumnName = "id_param")
+    private Pnom nationality; // Changed to String
 
     @Column(name = "resident")
     private boolean resident;
@@ -37,7 +37,7 @@ public class Client implements Serializable {
     private String accountNumber; // Changed to match database column name
 
     @Column(name = "agency", length = 50)
-    private String agency; // Changed to String
+    private String agency;
 
     @Column(name = "accountCreationDate")
     private LocalDate accountCreationDate;
@@ -45,18 +45,19 @@ public class Client implements Serializable {
     @Column(name = "accountColsureDate")
     private LocalDate accountColsureDate;
 
-    @Column(name = "accountType", nullable = false, length = 50)
-    private String accountType; // Changed to String
+    @ManyToOne
+    @JoinColumn(name = "accountType",referencedColumnName = "id_param")
+    private Pnom accountType;
 
-    @Column(name = "DocumentType", nullable = false, length = 50)
-    private String documentType; // Changed to String
+    @ManyToOne
+    @JoinColumn(name = "documentType",referencedColumnName = "id_param")
+    private Pnom DocumentType;
 
-    @Column(name = "accountcurrency", nullable = false, length = 50)
-    private String accountcurrency; // Changed to String
-
+    @ManyToOne
+    @JoinColumn(name = "accountcurrency",referencedColumnName = "id_param")
+    private Pnom accountcurrency;
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TitlePayPivot> titlePayPivots;
-
 
     public long getIdCli() {
         return idCli;
@@ -64,14 +65,6 @@ public class Client implements Serializable {
 
     public void setIdCli(long idCli) {
         this.idCli = idCli;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
     }
 
     public String getFirstname() {
@@ -82,11 +75,19 @@ public class Client implements Serializable {
         this.firstname = firstname;
     }
 
-    public String getNationality() {
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public Pnom getNationality() {
         return nationality;
     }
 
-    public void setNationality(String nationality) {
+    public void setNationality(Pnom nationality) {
         this.nationality = nationality;
     }
 
@@ -130,28 +131,28 @@ public class Client implements Serializable {
         this.accountColsureDate = accountColsureDate;
     }
 
-    public String getAccountType() {
+    public Pnom getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(String accountType) {
+    public void setAccountType(Pnom accountType) {
         this.accountType = accountType;
     }
 
-    public String getDocumentType() {
-        return documentType;
-    }
-
-    public void setDocumentType(String documentType) {
-        this.documentType = documentType;
-    }
-
-    public String getAccountcurrency() {
+    public Pnom getAccountcurrency() {
         return accountcurrency;
     }
 
-    public void setAccountcurrency(String accountcurrency) {
+    public void setAccountcurrency(Pnom accountcurrency) {
         this.accountcurrency = accountcurrency;
+    }
+
+    public Pnom getDocumentType() {
+        return DocumentType;
+    }
+
+    public void setDocumentType(Pnom documentType) {
+        DocumentType = documentType;
     }
 
     public List<TitlePayPivot> getTitlePayPivots() {

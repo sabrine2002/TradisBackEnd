@@ -2,17 +2,23 @@ package tn.abt.tradis.Controller;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.abt.tradis.Config.*;
 import tn.abt.tradis.Entites.Pnom;
+import tn.abt.tradis.Entites.Title;
 import tn.abt.tradis.Enum.SettlementStatus;
 import tn.abt.tradis.Repository.ParameterRepository;
 import tn.abt.tradis.Repository.SettlementRepository;
+import tn.abt.tradis.Repository.TitleRepository;
 import tn.abt.tradis.Service.SettlementService;
 import tn.abt.tradis.Entites.Settlement;
+import tn.abt.tradis.Service.TitleService;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,6 +30,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/settlements")
 @RequiredArgsConstructor
 public class SettlementController {
+
+
     @Autowired
     private  EntityManager entityManager;
     @Autowired

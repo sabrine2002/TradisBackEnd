@@ -2,13 +2,19 @@ package tn.abt.tradis.Controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import tn.abt.tradis.Config.AdminCreationRequest;
 import tn.abt.tradis.Config.AgentCreationRequest;
 import tn.abt.tradis.Config.AgentDTO;
+import tn.abt.tradis.Config.TitleUpdateDTO;
+import tn.abt.tradis.Entites.Title;
+import tn.abt.tradis.Repository.TitleRepository;
 import tn.abt.tradis.Repository.UserRepository;
 import tn.abt.tradis.Service.UserManagementService;
 
@@ -19,6 +25,9 @@ import java.util.List;
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
+    private static final Logger logger = LoggerFactory.getLogger(TitleController.class);
+    @Autowired
+    private TitleRepository titleRepository;
 
     @Autowired
     private UserManagementService userManagementService;
@@ -52,6 +61,23 @@ public class UserController {
     @GetMapping("/count-agents")
     public ResponseEntity<Long> countAgents() {
         return ResponseEntity.ok(userManagementService.countAgents());
+    }
+    @GetMapping("/{numDom}")
+    public ResponseEntity<TitleUpdateDTO> getTitleToUpdateById(@PathVariable String numDom) {
+        try {
+            Title title = titleRepository.findById(numDom)
+                    .orElseThrow(() -> {
+                        logger.error("Title not found: {}", numDom);
+                        return new IllegalArgumentException("Title not found: " + numDom);
+                    });
+            return ResponseEntity.ok(new TitleUpdateDTO(title));
+        } catch (IllegalArgumentException e) {
+            logger.error("Title not found: {}", numDom);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            logger.error("Unexpected error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
 
