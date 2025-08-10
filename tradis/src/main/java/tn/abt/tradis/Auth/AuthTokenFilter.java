@@ -1,30 +1,31 @@
 package tn.abt.tradis.Auth;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+import tn.abt.tradis.Service.UserDetailsImpl;
 import tn.abt.tradis.Utils.JwtUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -38,24 +39,19 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                Claims claims = Jwts.parserBuilder()
-                        .setSigningKey(jwtUtils.key())
-                        .build()
-                        .parseClaimsJws(jwt)
-                        .getBody();
-                String username = claims.getSubject();
-                List<String> roles = claims.get("roles", List.class);
-                List<SimpleGrantedAuthority> authorities = roles != null
-                        ? roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
-                        : List.of();
+                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                logger.info("JWT roles for {}: {}", username, roles);
-
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                username, null, authorities);
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (userDetails instanceof UserDetailsImpl) {
+                    logger.info("Authenticated user: {}, roles: {}", username, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    logger.error("UserDetails is not an instance of UserDetailsImpl for username: {}", username);
+                }
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e.getMessage());

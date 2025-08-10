@@ -10,6 +10,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import tn.abt.tradis.Config.AgencyDto;
+import tn.abt.tradis.Entites.Pnom;
 import tn.abt.tradis.Entites.User;
 
 public class UserDetailsImpl implements UserDetails {
@@ -21,16 +23,20 @@ public class UserDetailsImpl implements UserDetails {
 
     private String email;
 
+    private String lastName;
+    private AgencyDto agencyLabel3;
     @JsonIgnore
     private String password;
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password,
+    public UserDetailsImpl(Long id, String username, String email, String lastName, AgencyDto agencyLabel3, String password,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
         this.email = email;
+        this.lastName = lastName;
+        this.agencyLabel3 = agencyLabel3;
         this.password = password;
         this.authorities = authorities;
     }
@@ -40,10 +46,15 @@ public class UserDetailsImpl implements UserDetails {
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
+        // Convert Pnom to AgencyDto to extract label3
+        AgencyDto agencyDto = new AgencyDto(user.getAgencyCode() != null ? user.getAgencyCode().getLabel3() : null);
+
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getLastname(),
+                agencyDto, // Pass AgencyDto with label3
                 user.getPassword(),
                 authorities);
     }
@@ -69,6 +80,18 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public String getUsername() {
         return username;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public AgencyDto getAgencyLabel3() {
+        return agencyLabel3;
+    }
+
+    public void setAgencyLabel3(AgencyDto agencyLabel3) {
+        this.agencyLabel3 = agencyLabel3;
     }
 
     @Override

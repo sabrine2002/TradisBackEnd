@@ -4,12 +4,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import tn.abt.tradis.Entites.Title;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TitleRepository extends JpaRepository<Title, String> {
     @Query("SELECT COUNT(t) FROM Settlement t")
     long countAllTitles();
     Optional<Title> findByNumDom(String numDom);
+    List<Title> findByUserId(Long userId);
+    Long countByUserId(Long userId);
 
 
 

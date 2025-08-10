@@ -1,5 +1,6 @@
 package tn.abt.tradis.Entites;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "parameters")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 public class Pnom implements Serializable {
 
     @Id

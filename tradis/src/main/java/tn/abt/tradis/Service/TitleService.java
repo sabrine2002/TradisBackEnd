@@ -207,4 +207,11 @@ public class TitleService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<TitleWithLabelsDTO> getTitlesByUserId(Long userId) {
+        return titleRepository.findByUserId(userId).stream()
+                .map(TitleWithLabelsDTO::new)
+                .collect(Collectors.toList());
+    }
+
 }

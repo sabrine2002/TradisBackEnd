@@ -76,6 +76,8 @@ public class AuthController {
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
+                userDetails.getLastName(),
+                userDetails.getAgencyLabel3(),
                 roles));
     }
 

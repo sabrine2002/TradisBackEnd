@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tn.abt.tradis.Config.*;
 import tn.abt.tradis.Entites.Client;
@@ -14,6 +15,7 @@ import tn.abt.tradis.Repository.ParameterRepository;
 import tn.abt.tradis.Repository.TitleRepository;
 import tn.abt.tradis.Service.TitleService;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import tn.abt.tradis.Service.UserDetailsImpl;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -177,6 +179,33 @@ public class TitleController {
                 .map(client -> new DropDownOptionT(client.getIdCli(), client.getIdCli(), client.getFirstname()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(clientOptions);
+    }
+
+    @GetMapping("/by-user")
+    public ResponseEntity<List<TitleWithLabelsDTO>> getTitlesByCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetailsImpl userDetails) {
+            Long userId = userDetails.getId();
+            logger.info("Fetching titles for user ID: {}, Roles: {}", userId, userDetails.getAuthorities());
+            List<TitleWithLabelsDTO> titles = titleService.getTitlesByUserId(userId);
+            return ResponseEntity.ok(titles);
+        } else {
+            logger.error("Principal is not UserDetailsImpl: {}", principal);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }
+
+    @GetMapping("/count-by-user")
+    public ResponseEntity<Long> countTitlesByCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetailsImpl userDetails) {
+            Long userId = userDetails.getId();
+            logger.info("Counting titles for user ID: {}, Roles: {}", userId, userDetails.getAuthorities());
+            return ResponseEntity.ok(titleRepository.countByUserId(userId));
+        } else {
+            logger.error("Principal is not UserDetailsImpl: {}", principal);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
     }
 
 }

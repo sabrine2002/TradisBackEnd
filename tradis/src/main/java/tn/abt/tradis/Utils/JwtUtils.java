@@ -32,10 +32,13 @@ public class JwtUtils {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
-        logger.info("Generating JWT for user: {}, roles: {}", userPrincipal.getUsername(), roles);
+        logger.info("Generating JWT for user: {} ,email: {} ,lastname: {}, agence: {}, roles: {}", userPrincipal.getUsername(),userPrincipal.getEmail(), userPrincipal.getLastName(),userPrincipal.getAgencyLabel3(),roles);
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
+                .claim("email", userPrincipal.getEmail())
+                .claim("lastname", userPrincipal.getLastName())
+                .claim("agence", userPrincipal.getAgencyLabel3())
                 .claim("roles", roles) // Ensure roles are included
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
