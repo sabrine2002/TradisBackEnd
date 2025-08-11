@@ -14,7 +14,9 @@ import tn.abt.tradis.Repository.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -212,6 +214,15 @@ public class TitleService {
         return titleRepository.findByUserId(userId).stream()
                 .map(TitleWithLabelsDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, Long> getTitleCountsByUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("User not found: " + username));
+        Map<String, Long> counts = new HashMap<>();
+        counts.put("nonApure", titleRepository.countTitlesByUserIdAndStatusCode(user.getId(), 12L));
+        counts.put("apure", titleRepository.countTitlesByUserIdAndStatusCode(user.getId(), 13L));
+        return counts;
     }
 
 }

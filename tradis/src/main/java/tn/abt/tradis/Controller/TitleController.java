@@ -206,6 +206,13 @@ public class TitleController {
             logger.error("Principal is not UserDetailsImpl: {}", principal);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
+
+    }
+    @GetMapping("/countsStatus")
+    public ResponseEntity<Map<String, Long>> getTitleCounts() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Map<String, Long> counts = titleService.getTitleCountsByUser(username);
+        return ResponseEntity.ok(counts);
     }
 
 }

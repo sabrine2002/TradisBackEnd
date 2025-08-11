@@ -14,10 +14,8 @@ public interface TitleRepository extends JpaRepository<Title, String> {
     List<Title> findByUserId(Long userId);
     Long countByUserId(Long userId);
 
-
-
-
-
+    @Query("SELECT COUNT(t) FROM Title t WHERE t.user.id = :utilisateurId AND t.titleStatus.idParam = :statusCode")
+    Long countTitlesByUserIdAndStatusCode(Long utilisateurId, Long statusCode);
 }
 
 

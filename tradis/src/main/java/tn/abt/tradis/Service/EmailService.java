@@ -24,7 +24,7 @@ public class EmailService {
         helper.setSubject("Compte Attijari Bank : bienvenue et informations de connexion");
 
         String htmlMsg = "<html><body>"
-                + "<h2> Nous avons le plaisir de vous informer que votre compte agent a été créé avec succès !</h2>"
+                + "<h2> Nous avons le plaisir de vous informer que votre compte  a été créé avec succès !</h2>"
                 + "<p><b>Nom d'utilisateur:</b> " + username + "</p>"
                 + "<p><b>Mot de passe temporaire:</b> " + password + "</p>"
                 + "<p>Pour des raisons de sécurité, nous vous invitons à vous connecter dès que possible et à modifier votre mot de passe.</p>"

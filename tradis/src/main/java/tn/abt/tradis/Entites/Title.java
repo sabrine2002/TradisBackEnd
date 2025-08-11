@@ -1,6 +1,7 @@
 package tn.abt.tradis.Entites;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import tn.abt.tradis.Enum.TitileStatus;
@@ -60,6 +61,11 @@ public class Title implements Serializable {
     @ManyToOne
     @JoinColumn(name = "titile_Status", referencedColumnName = "id_param")
     private Pnom titileStatus;
+
+    @JsonProperty("titleStatus")
+    public Long getTitleStatusId() {
+        return titleStatus != null ? titleStatus.getIdParam() : null;
+    }
 
     public String getNumDom() {
         return numDom;
@@ -241,11 +247,5 @@ public class Title implements Serializable {
         return advancePaymentAmount;
     }
 
-    public Pnom getTitileStatus() {
-        return titileStatus;
-    }
 
-    public void setTitileStatus(Pnom titileStatus) {
-        this.titileStatus = titileStatus;
-    }
 }
